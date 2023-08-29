@@ -1,0 +1,41 @@
+body{
+    margin: 0;
+    font-family: 'Didact Gothic', sans-serif;
+}
+
+.App{
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100vh;
+    background: rgb(51,190,91);
+    background: linear-gradient(127deg, rgba(51,190,91,1) 3%, rgba(100,220,185,1) 63%, rgba(193,232,237,1) 84%);}
+
+.ContainerLogo{
+    margin: 0;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+
+}
+
+.NameLogo{
+    margin-left: 15px;
+    font-size: 1.5rem;
+}
+
+.icon{
+    width: 40px;
+    height: 40px;
+    background-color: #64DCB9;
+    display: flex;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    border-radius: 8px;
+}
