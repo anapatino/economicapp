@@ -9,7 +9,11 @@ import { Outlet } from "react-router-dom";
  function Dashboard() {
 
   const listInterest: Items[] = [
-    { key: 'interestSimple', name: 'Interes simple',route:'interest-simple/' },
+    { key: 'interestSimple', name: 'Calcular el interes',route:'interest-simple/' },
+    { key: 'interestSimpleMf', name: 'Calcular el monto final',route:'interest-simple/monto-final/' },
+    { key: 'interestSimpleCapital', name: 'Calcular el Capital',route:'interest-simple/capital/' },
+    { key: 'interestSimpleTasaInteres', name: 'Calcular la tasa de interes',route:'interest-simple/tasa-de-interes/' },
+    { key: 'interestSimpleTiempoInvertido', name: 'Calcular tiempo de inversion',route:'interest-simple/tiempo-invertido/' },
     { key: 'interestCompound', name: 'Interes Compuesto',route:'interest-compound/' },
   ];
   const listSecond: Items[] = [
@@ -30,7 +34,7 @@ import { Outlet } from "react-router-dom";
         <p className='NameLogo'>economicapp</p>
         </Row>
         <Col css={{justifyItems:'center', marginLeft:'1.5rem'}}>
-          <DropdownNative items={listInterest} title='Consultar interes'/>
+          <DropdownNative items={listInterest} title='Consultar Interes Simple'/>
           <Spacer y={3}/>
           <DropdownNative items={listSecond} title='Consultas segundo corte'/>
           <Spacer y={3}/>
