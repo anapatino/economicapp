@@ -67,7 +67,6 @@ export function InterestSimpleTasaInteres() {
             <Spacer y={1.2} />
             <Row justify='space-between' css={{ width: '100%' }}>
                 <Container css={{ width: '99%', height: '25rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '2rem' }}>
-                  
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Col>
                             <Col css={{ marginLeft: '2rem' }}>
@@ -133,10 +132,10 @@ export function InterestSimpleTasaInteres() {
                 <Spacer x={2} />
                 <Col>
                     <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '1.2rem', marginBottom: '2.5rem' }}>
-                        <Text h1 size={25} css={{ letterSpacing: '1px', fontWeight: '$thin', marginLeft: '5rem' }}>Formula</Text>
+                        <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$thin', marginLeft: '1rem' }}>Formula</Text>
                     </Col>
                     <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '1.5rem' }}>
-                        <Text h1 size={25} css={{ letterSpacing: '1px', fontWeight: '$thin', marginLeft: '4rem' }}>Resultado</Text>
+                        <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$thin', marginLeft: '0.4rem' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
                             <Dollar />
