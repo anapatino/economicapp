@@ -10,10 +10,6 @@ import { Outlet } from "react-router-dom";
 
   const listInterest: Items[] = [
     { key: 'interestSimple', name: 'interes Simple',route:'interest-simple/' },
-    // { key: 'interestSimpleMf', name: 'Calcular el monto final',route:'interest-simple/monto-final/' },
-    // { key: 'interestSimpleCapital', name: 'Calcular el Capital',route:'interest-simple/capital/' },
-    // { key: 'interestSimpleTasaInteres', name: 'Calcular la tasa de interes',route:'interest-simple/tasa-de-interes/' },
-    // { key: 'interestSimpleTiempoInvertido', name: 'Calcular tiempo de inversion',route:'interest-simple/tiempo-invertido/' },
     { key: 'interestCompound', name: 'Interes Compuesto',route:'interest-compound/' },
   ];
   const listSecond: Items[] = [
