@@ -2,7 +2,7 @@ import {App} from "../App";
 import Dashboard from "../pages/dashboard";
 import { ComponentInterestSimple } from "../pages/interst/InterestSimple";
 import { InterestCompound } from "../pages/interst/interestCompound";
-
+import Home from "../pages/home";
 import {
     createBrowserRouter
   } from "react-router-dom";
@@ -16,6 +16,10 @@ import {
           path: "",
           element: <Dashboard />,
           children:[
+            {
+              path: "",
+              element: <Home />,
+            },
             {
               path: "interest-simple/",
               element: <ComponentInterestSimple />,
