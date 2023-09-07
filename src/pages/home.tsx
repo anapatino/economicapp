@@ -1,5 +1,6 @@
 import { Row,Text,Col} from '@nextui-org/react';
 import Image from "../assets/image/men.png";
+// import capitalImage from '../assets/image/capital.png';
 import { ReactComponent as Grap } from "../assets/icons/grap.svg";
 
 

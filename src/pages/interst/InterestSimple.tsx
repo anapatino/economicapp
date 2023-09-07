@@ -4,9 +4,15 @@ import { useForm } from "react-hook-form";
 import { ReactComponent as Dollar } from "../../assets/icons/dollar.svg";
 import { ReactComponent as Calendar } from "../../assets/icons/calendar.svg";
 import { ReactComponent as Percentage } from "../../assets/icons/percentage.svg";
+import capitalImage from '../../assets/image/capital.png';
+import capitalFinalImage from '../../assets/image/capitalFinal.png';
+import tiempoImage from '../../assets/image/tiempo.png';
+import interesProducidoImage from '../../assets/image/interesProducido.png';
+import tasaInteresImage from '../../assets/image/tasaInteres.png';
 import { Checkbox } from 'antd';
 import { InterestSimple } from '../../domain/InterestSimple';
 import React, { useState } from 'react';
+
 
 
 interface FormData {
@@ -38,14 +44,13 @@ export function ComponentInterestSimple() {
     const [valorFuturo, setValorFuturo] = useState<number | null>(null);
     const [valorCapital, setValorCapital] = useState<number | null>(null);
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
-
+    const [imagen, setImagen] = useState<string>('');
 
     const onSubmit = (data: FormData) => {
         setValorFuturo(null);
         setTimeC(null);
         let tiempo = 0;
-
-        let imagen = '';
+        
         let filledFields = 0; // Contador de campos llenos
 
 
@@ -79,18 +84,28 @@ export function ComponentInterestSimple() {
         if (filledFields === 3) {
             if (data.capital && data.interestRate && tiempo) {
                 setValorFuturo(InterestSimple.calculateFutureValue(data, tiempo, isChecked));
+                if(isChecked){
+                    setImagen(capitalFinalImage);
+                }else{
+                    setImagen(interesProducidoImage);
+                }
+                
             } else if (data.interestEarned && data.interestRate && tiempo) {
                 setValorFuturo(InterestSimple.calculateCapital(data, tiempo));
+                setImagen(capitalImage);
             }
             if (data.capital && data.interestEarned && tiempo) {
                 setValorCapital(InterestSimple.calculateInterestRate(data, tiempo));
-            } 
+                setImagen(tasaInteresImage);
+            }
             if (data.capital && data.interestEarned && data.interestRate) {
                 const result = InterestSimple.calculateTime(data, "days");
                 setTimeC(result);
+                setImagen(tiempoImage);
             }
         }
     };
+    console.log("imagen:", imagen);
 
     return (
         <Col css={{ padding: '2rem' }}>
@@ -140,7 +155,7 @@ export function ComponentInterestSimple() {
                                 </Row>
 
                                 <Spacer y={0.7} />
-                                <Input  {...register("interestRate")} min="0" clearable label="Tasa de interes %" type='number' width='10rem' />
+                                <Input  {...register("interestRate")} min="0" clearable label="Tasa de interes %" type='double' width='10rem' />
                                 <Spacer y={0.7} />
                                 <Input  {...register("interestEarned")} min="0" clearable label="Interes producido" type='number' width='10rem' />
                                 <Spacer y={1} />
@@ -154,20 +169,23 @@ export function ComponentInterestSimple() {
                 </Container>
                 <Spacer x={2} />
                 <Col>
-                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%', marginBottom: '2.5rem' }}>
+                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '5% 10%', marginBottom: '2.5rem' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Formula</Text>
-                        {/* <img src="src\assets\capital.png" alt="Fórmula" width="50%" height="auto" /> */}
+                        
+                        {<img
+                            src={imagen}
+                            alt="imag"
+                            style={{ width: "100%", height: "auto", marginTop: "0%", marginLeft: '0%' }}
+                        />}
+
                     </Col>
+                    
                     <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
-
-
-
-
-
                             <Text size={20}>
+                                
                                 {timeC !== null
                                     ? `${timeC.años} años, ${timeC.meses} meses, ${timeC.días} días`
                                     : valorFuturo !== null
