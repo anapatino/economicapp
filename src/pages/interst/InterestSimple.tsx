@@ -3,6 +3,7 @@ import { Select, Option } from '../../styled-component/Select';
 import { useForm } from "react-hook-form";
 import { ReactComponent as Dollar } from "../../assets/icons/dollar.svg";
 import { ReactComponent as Calendar } from "../../assets/icons/calendar.svg";
+import { ReactComponent as Percentage } from "../../assets/icons/percentage.svg";
 import { Checkbox } from 'antd';
 import { InterestSimple } from '../../domain/InterestSimple';
 import React, { useState } from 'react';
@@ -35,7 +36,7 @@ export function ComponentInterestSimple() {
 
 
     const [valorFuturo, setValorFuturo] = useState<number | null>(null);
-
+    const [valorCapital, setValorCapital] = useState<number | null>(null);
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
 
 
@@ -80,17 +81,13 @@ export function ComponentInterestSimple() {
                 setValorFuturo(InterestSimple.calculateFutureValue(data, tiempo, isChecked));
             } else if (data.interestEarned && data.interestRate && tiempo) {
                 setValorFuturo(InterestSimple.calculateCapital(data, tiempo));
-            } else if (data.capital && data.interestEarned && tiempo) {
-                setValorFuturo(InterestSimple.calculateInterestRate(data, tiempo));
             }
+            if (data.capital && data.interestEarned && tiempo) {
+                setValorCapital(InterestSimple.calculateInterestRate(data, tiempo));
+            } 
             if (data.capital && data.interestEarned && data.interestRate) {
                 const result = InterestSimple.calculateTime(data, "days");
                 setTimeC(result);
-                // return (
-                //     <Text size={20}>
-                //         {timeC !== null ? `${timeC.años} años, ${timeC.meses} meses, ${timeC.días} días` : '---'}
-                //     </Text>
-                // );
             }
         }
     };
@@ -117,15 +114,15 @@ export function ComponentInterestSimple() {
                                     <Row>
                                         {tiempoType === 'years' ? (
 
-                                            <Input {...register('customYears')} min="0" clearable label="Años" type="number" width="8rem"  defaultValue={0} />
+                                            <Input {...register('customYears')} min="0" clearable label="Años" type="number" width="8rem" defaultValue={0} />
                                         ) : ""}
                                         <Spacer x={0.6} />
                                         {tiempoType === 'months' || tiempoType === 'years' ? (
-                                            <Input {...register('customMonths')} min="0" max="11" clearable label="Meses" type="number" width="8rem"  defaultValue={0} />
+                                            <Input {...register('customMonths')} min="0" max="11" clearable label="Meses" type="number" width="8rem" defaultValue={0} />
                                         ) : ""}
                                         <Spacer x={0.6} />
                                         {tiempoType === 'months' || tiempoType === 'days' || tiempoType === 'years' ? (
-                                            <Input {...register('customDays')} min="0" clearable label="Días" type="number" width="8rem"  defaultValue={0} />
+                                            <Input {...register('customDays')} min="0" clearable label="Días" type="number" width="8rem" defaultValue={0} />
                                         ) : ""}
                                     </Row>
                                 </Row>
@@ -166,16 +163,30 @@ export function ComponentInterestSimple() {
                         <Spacer y={1} />
                         <Row align='center'>
 
-                            {timeC !== null ? <Calendar /> : <Dollar />}
 
-                            <Spacer x={1} />
+
+
+
                             <Text size={20}>
                                 {timeC !== null
                                     ? `${timeC.años} años, ${timeC.meses} meses, ${timeC.días} días`
                                     : valorFuturo !== null
                                         ? valorFuturo.toFixed(2)
-                                        : '---'}
+                                        : valorCapital !== null
+                                            ? valorCapital.toFixed(2)
+                                            : '---'}
                             </Text>
+                            <Spacer x={0.5} />
+                            {timeC !== null ? (
+                                <Calendar />
+                            ) : valorFuturo !== null ? (
+                                <Dollar />
+                            ) : valorCapital !== null ? (
+                                <Percentage />
+                            ) : (
+                                <Dollar />
+                            )}
+
                         </Row>
                     </Col>
                 </Col>
