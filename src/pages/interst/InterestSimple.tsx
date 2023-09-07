@@ -8,11 +8,6 @@ import { InterestSimple } from '../../domain/InterestSimple';
 import React, { useState } from 'react';
 
 
-interface Option {
-    value: string;
-    label: string;
-}
-
 interface FormData {
     startDate: string;
     endDate: string;
@@ -31,15 +26,6 @@ interface FormData {
 export function ComponentInterestSimple() {
     const { register, handleSubmit } = useForm<FormData>();
     const [tiempoType, setTiempoType] = useState('years');
-    const [typeInterest, setTypeInterest] = useState('Tipo');
-
-    const options: Option[] = [
-        { value: 'annual', label: 'anual' },
-        { value: 'bimonthly', label: 'bimestral' },
-        { value: 'quarterly', label: 'trimestral' },
-        { value: 'semiannual', label: 'semestral' },
-        { value: 'months', label: 'mensual' },
-    ];
 
     const [isChecked, setIsChecked] = useState(false);
 
@@ -49,29 +35,33 @@ export function ComponentInterestSimple() {
 
 
     const [valorFuturo, setValorFuturo] = useState<number | null>(null);
+
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
+
 
     const onSubmit = (data: FormData) => {
         setValorFuturo(null);
         setTimeC(null);
         let tiempo = 0;
+
         let imagen = '';
         let filledFields = 0; // Contador de campos llenos
 
 
         switch (tiempoType) {
             case 'years':
-                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 360);
+                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 365);
                 break;
             case 'months':
-                tiempo = (data.customMonths / 12) + (data.customDays / 360);
+                tiempo = (data.customMonths / 12) + (data.customDays / 365);
                 break;
             case 'days':
-                tiempo = data.customDays / 360;
+                tiempo = data.customDays / 365;
                 break;
             default:
                 break;
         }
+
         if (tiempo > 0) {
             filledFields++;
         }
@@ -126,6 +116,7 @@ export function ComponentInterestSimple() {
                                     <Spacer x={0.6} />
                                     <Row>
                                         {tiempoType === 'years' ? (
+
                                             <Input {...register('customYears')} min="0" clearable label="Años" type="number" width="8rem"  defaultValue={0} />
                                         ) : ""}
                                         <Spacer x={0.6} />
@@ -174,7 +165,9 @@ export function ComponentInterestSimple() {
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
+
                             {timeC !== null ? <Calendar /> : <Dollar />}
+
                             <Spacer x={1} />
                             <Text size={20}>
                                 {timeC !== null

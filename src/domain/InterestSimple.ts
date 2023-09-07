@@ -51,6 +51,7 @@ export class InterestSimple {
     let time = (interestEarned / (capital * interestRate)) * 100;
     time = time * 360;
 
+
     const años = Math.floor(time / 360);
     const díasRestantes = time % 360;
     const meses = Math.floor(díasRestantes / 30);
