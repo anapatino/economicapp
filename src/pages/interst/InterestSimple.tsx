@@ -7,11 +7,6 @@ import { InterestSimple } from '../../domain/InterestSimple';
 import React, { useState } from 'react';
 
 
-interface Option {
-    value: string;
-    label: string;
-}
-
 interface FormData {
     startDate: string;
     endDate: string;
@@ -30,15 +25,6 @@ interface FormData {
 export function ComponentInterestSimple() {
     const { register, handleSubmit } = useForm<FormData>();
     const [tiempoType, setTiempoType] = useState('years');
-    const [typeInterest, setTypeInterest] = useState('Tipo');
-
-    const options: Option[] = [
-        { value: 'annual', label: 'anual' },
-        { value: 'bimonthly', label: 'bimestral' },
-        { value: 'quarterly', label: 'trimestral' },
-        { value: 'semiannual', label: 'semestral' },
-        { value: 'months', label: 'mensual' },
-    ];
 
     const [isChecked, setIsChecked] = useState(false);
 
@@ -48,36 +34,39 @@ export function ComponentInterestSimple() {
 
 
     const [valorFuturo, setValorFuturo] = useState<number | null>(null);
-    
+
     const onSubmit = (data: FormData) => {
         let tiempo = 0;
-        let imagen = '';
         switch (tiempoType) {
             case 'years':
-                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 360);
+                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 365);
                 break;
             case 'months':
-                tiempo = (data.customMonths / 12) + (data.customDays / 360);
+                tiempo = (data.customMonths / 12) + (data.customDays / 365);
                 break;
             case 'days':
-                tiempo = data.customDays / 360;
+                tiempo = data.customDays / 365;
                 break;
             default:
                 break;
         }
 
         if (data.capital && data.interestRate && tiempo) {
-            setValorFuturo(InterestSimple.calculateFutureValue(data,tiempo,isChecked));
+            setValorFuturo(InterestSimple.calculateFutureValue(data, tiempo, isChecked));
         }
 
         if (data.interestEarned && data.interestRate && tiempo) {
-            setValorFuturo(InterestSimple.calculateCapital(data,tiempo));
+            setValorFuturo(InterestSimple.calculateCapital(data, tiempo));
         }
         if (data.capital && data.interestEarned && tiempo) {
-            setValorFuturo(InterestSimple.calculateInterestRate(data,tiempo));
+            setValorFuturo(InterestSimple.calculateInterestRate(data, tiempo));
         }
         if (data.capital && data.interestEarned && data.interestRate) {
-            setValorFuturo(InterestSimple.calculateTime(data,"months"));
+            setValorFuturo(InterestSimple.calculateTime(data, "months"));
+        }
+        else {
+            // Manejar caso de condiciones no válidas, por ejemplo, mostrar un mensaje de error.
+            console.error("Las condiciones ingresadas no son válidas para realizar los cálculos de interés simple.");
         }
     };
 
@@ -100,22 +89,22 @@ export function ComponentInterestSimple() {
                                         <Option value="days">Días</Option>
                                     </Select>
                                     <Spacer x={0.6} />
-                                        <Row>
-                                            {tiempoType === 'years'  ? (
-                                                <Input {...register('customYears')} min="0" clearable label="Años" type="number" width="8rem" />
-                                            ): ""}
-                                             <Spacer x={0.6} />
-                                            {tiempoType === 'months' || tiempoType === 'years' ? (
-                                                <Input {...register('customMonths')} min="0" max="11" clearable label="Meses" type="number" width="8rem" />
-                                            ): ""}
-                                             <Spacer x={0.6} />
-                                            {tiempoType === 'months' || tiempoType === 'days' || tiempoType === 'years'? (
-                                                <Input {...register('customDays')} min="0" max="31" clearable label="Días" type="number" width="8rem" />
-                                            ): ""}
-                                        </Row>
+                                    <Row>
+                                        {tiempoType === 'years' ? (
+                                            <Input {...register('customYears')} min="0" clearable label="Años" type="number" width="8rem" />
+                                        ) : ""}
+                                        <Spacer x={0.6} />
+                                        {tiempoType === 'months' || tiempoType === 'years' ? (
+                                            <Input {...register('customMonths')} min="0" max="11" clearable label="Meses" type="number" width="8rem" />
+                                        ) : ""}
+                                        <Spacer x={0.6} />
+                                        {tiempoType === 'months' || tiempoType === 'days' || tiempoType === 'years' ? (
+                                            <Input {...register('customDays')} min="0" max="365" clearable label="Días" type="number" width="8rem" />
+                                        ) : ""}
+                                    </Row>
                                 </Row>
                                 <Spacer y={0.7} />
-                                <Row style={{ display: 'flex', alignItems: 'center',justifyItems:'center' }}>
+                                <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input {...register("capital")} min="0" clearable label="Capital" type='number' width='20.7rem' />
                                     <Spacer x={2} />
                                     <Checkbox
@@ -142,15 +131,15 @@ export function ComponentInterestSimple() {
                 </Container>
                 <Spacer x={2} />
                 <Col>
-                    <Col  css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%', marginBottom: '2.5rem'}}>
-                        <Text h1  size={20} css={{ letterSpacing: '1px', fontWeight: '$bold'}}>Formula</Text>
+                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%', marginBottom: '2.5rem' }}>
+                        <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Formula</Text>
                         {/* <img src="src\assets\capital.png" alt="Fórmula" width="50%" height="auto" /> */}
                     </Col>
-                    <Col  css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%'}}>
-                        <Text h1  size={20} css={{ letterSpacing: '1px', fontWeight: '$bold'}}>Resultado</Text>
+                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%' }}>
+                        <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
-                            <Dollar/>
+                            <Dollar />
                             <Spacer x={1} />
                             <Text size={20}>
                                 {valorFuturo !== null ? valorFuturo.toFixed(2) : '---'}

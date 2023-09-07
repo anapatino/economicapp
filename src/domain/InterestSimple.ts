@@ -50,11 +50,11 @@ export class InterestSimple {
     const { capital, interestEarned, interestRate } = data;
     let time = (interestEarned / (capital * interestRate)) * 100;
     time = time * 360;
-    let remainingDays = time % 360;
+    let remainingDays = time % 365;
     let date: number = 0;
     console.log(time);
     if (showTime === "years") {
-      date = Math.floor(time / 360);
+      date = Math.floor(time / 365);
     }
     if (showTime === "months") {
       date = Math.floor(remainingDays / 30);
