@@ -46,17 +46,15 @@ export class InterestSimple {
   static calculateTime(
     data: { capital: number; interestEarned: number; interestRate: number },
     showTime: string
-  ):  { años: number; meses: number; días: number } {
+  ): { años: number; meses: number; días: number } {
     const { capital, interestEarned, interestRate } = data;
     let time = (interestEarned / (capital * interestRate)) * 100;
     time = time * 360;
-
 
     const años = Math.floor(time / 360);
     const díasRestantes = time % 360;
     const meses = Math.floor(díasRestantes / 30);
     const días = Math.round(díasRestantes % 30);
- 
 
     return { años, meses, días };
   }
