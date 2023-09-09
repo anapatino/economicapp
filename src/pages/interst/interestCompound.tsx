@@ -71,7 +71,7 @@ export function InterestCompound() {
                 setValorFuturo(IC.calculateInitialInvestment(timeData, tiempo));
             }
 
-            if (data.capital && data.interestRate && data.interestEarned) {
+            if (data.capital && data.interestEarned) {
                 const interestData = {
                     capital: data.capital,
                     futureValue: data.interestEarned,
