@@ -16,6 +16,13 @@ export class InterestCompound {
     return this.calculateFutureValue(data, time) - data.capital;
   }
 
+  static calculateTotalCapital(
+    data: { capital: number; interestRate: number },
+    time: number
+  ): number {
+    return this.calculateFutureValue(data, time);
+  }
+
   static calculateInitialInvestment(
     data: { futureValue: number; interestRate: number },
     time: number
