@@ -56,13 +56,13 @@ export function ComponentInterestSimple() {
 
         switch (tiempoType) {
             case 'years':
-                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 365);
+                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 360);
                 break;
             case 'months':
-                tiempo = (data.customMonths / 12) + (data.customDays / 365);
+                tiempo = (data.customMonths / 12) + (data.customDays / 360);
                 break;
             case 'days':
-                tiempo = data.customDays / 365;
+                tiempo = data.customDays / 360;
                 break;
             default:
                 break;
@@ -133,7 +133,7 @@ export function ComponentInterestSimple() {
                                         ) : ""}
                                         <Spacer x={0.6} />
                                         {tiempoType === 'months' || tiempoType === 'years' ? (
-                                            <Input {...register('customMonths')} min="0" max="11" clearable label="Meses" type="number" width="8rem" defaultValue={0} />
+                                            <Input {...register('customMonths')} min="0" clearable label="Meses" type="number" width="8rem" defaultValue={0} />
                                         ) : ""}
                                         <Spacer x={0.6} />
                                         {tiempoType === 'months' || tiempoType === 'days' || tiempoType === 'years' ? (
@@ -169,7 +169,7 @@ export function ComponentInterestSimple() {
                 </Container>
                 <Spacer x={2} />
                 <Col>
-                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '5% 10%', marginBottom: '2.5rem' }}>
+                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '5% 8%', marginBottom: '2.5rem' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Formula</Text>
                         {<img
                             src={imagen}
