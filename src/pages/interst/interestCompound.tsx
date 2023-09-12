@@ -80,9 +80,6 @@ export function InterestCompound() {
         }
     };
 
-
-
-
     return (
         <Col css={{ padding: '2rem' }}>
             <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Calcular Interes Compuesto</Text>
@@ -130,7 +127,7 @@ export function InterestCompound() {
                                 </Row>
 
                                 <Spacer y={0.7} />
-                                <Input  {...register("interestRate")} min="0" clearable label="Tasa de interes %" type='number' width='10rem' />
+                                <Input  {...register("interestRate")} min="0" clearable label="Tasa de interes %" type='double' width='10rem' />
                                 <Spacer y={0.7} />
                                 <Input  {...register("interestEarned")} min="0" clearable label="Interes producido" type='number' width='10rem' />
                                 <Spacer y={1} />
@@ -138,7 +135,6 @@ export function InterestCompound() {
                                     Calcular
                                 </Button>
                             </Col>
-
                         </Col>
                     </form>
                 </Container>
