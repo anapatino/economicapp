@@ -33,7 +33,6 @@ export function InterestCompound() {
 
 
     const [valorFuturo, setValorFuturo] = useState<number | null>(null);
-
     const onSubmit = (data: FormData) => {
         let tiempo = 0;
         switch (tiempoType) {
@@ -56,9 +55,14 @@ export function InterestCompound() {
                     capital: data.capital,
                     interestRate: data.interestRate,
                 };
-                setValorFuturo(IC.calculateInterestEarned(interestData, tiempo));
-            }
+                if(isChecked){
+                    setValorFuturo(IC.calculateTotalCapital(interestData, tiempo));
+                }
+                else{
+                    setValorFuturo(IC.calculateInterestEarned(interestData, tiempo));
 
+                }
+            }
             if (data.interestEarned && data.interestRate) {
                 const timeData = {
                     futureValue: data.interestEarned,
@@ -67,7 +71,7 @@ export function InterestCompound() {
                 setValorFuturo(IC.calculateInitialInvestment(timeData, tiempo));
             }
 
-            if (data.capital && data.interestRate && data.interestEarned) {
+            if (data.capital && data.interestEarned) {
                 const interestData = {
                     capital: data.capital,
                     futureValue: data.interestEarned,
@@ -79,6 +83,7 @@ export function InterestCompound() {
             console.error("Las condiciones ingresadas no son válidas para realizar los cálculos de interés compuesto.");
         }
     };
+
 
     return (
         <Col css={{ padding: '2rem' }}>

@@ -41,7 +41,7 @@ export function ComponentInterestSimple() {
     };
 
 
-    const [valorFuturo, setValorFuturo] = useState<number | null>(null);
+    const [valorFuturo, setValorFuturo] = useState<number | null >(null);
     const [valorCapital, setValorCapital] = useState<number | null>(null);
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
@@ -84,12 +84,13 @@ export function ComponentInterestSimple() {
         if (filledFields === 3) {
             if (data.capital && data.interestRate && tiempo) {
                 setValorFuturo(InterestSimple.calculateFutureValue(data, tiempo, isChecked));
+
                 if(isChecked){
                     setImagen(capitalFinalImage);
                 }else{
                     setImagen(interesProducidoImage);
                 }
-                
+
             } else if (data.interestEarned && data.interestRate && tiempo) {
                 setValorFuturo(InterestSimple.calculateCapital(data, tiempo));
                 setImagen(capitalImage);
@@ -105,8 +106,7 @@ export function ComponentInterestSimple() {
             }
         }
     };
-    console.log("imagen:", imagen);
-
+    console.log(valorFuturo);
     return (
         <Col css={{ padding: '2rem' }}>
             <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Calcular Interes Simple</Text>
@@ -171,7 +171,6 @@ export function ComponentInterestSimple() {
                 <Col>
                     <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '5% 8%', marginBottom: '2.5rem' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Formula</Text>
-                        
                         {<img
                             src={imagen}
                             alt="imag"
@@ -179,32 +178,31 @@ export function ComponentInterestSimple() {
                         />}
 
                     </Col>
-                    
                     <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
+                            {timeC !== null ? (
+                                    <Calendar />
+                                ) : valorFuturo !== null ? (
+                                    <Dollar />
+                                ) : valorCapital !== null ? (
+                                    <Percentage />
+                                ) : (
+                                    <Dollar />
+                                )}
+                            <Spacer x={0.5} />
                             <Text size={20}>
-                                
                                 {timeC !== null
                                     ? `${timeC.años} años, ${timeC.meses} meses, ${timeC.días} días`
-                                    : valorFuturo !== null
-                                        ? valorFuturo.toFixed(2)
+                                    : valorFuturo !== null 
+                                        ? valorFuturo % 1 === 0 ?  parseInt(valorFuturo.toFixed(0))
+                                        : parseFloat(valorFuturo.toFixed(2))
                                         : valorCapital !== null
-                                            ? valorCapital.toFixed(2)
+                                            ? valorCapital % 1 === 0 ?  parseInt(valorCapital.toFixed(0))
+                                            : parseFloat(valorCapital.toFixed(2))
                                             : '---'}
                             </Text>
-                            <Spacer x={0.5} />
-                            {timeC !== null ? (
-                                <Calendar />
-                            ) : valorFuturo !== null ? (
-                                <Dollar />
-                            ) : valorCapital !== null ? (
-                                <Percentage />
-                            ) : (
-                                <Dollar />
-                            )}
-
                         </Row>
                     </Col>
                 </Col>
