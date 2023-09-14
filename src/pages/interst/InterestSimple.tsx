@@ -41,7 +41,7 @@ export function ComponentInterestSimple() {
     };
 
 
-    const [valorFuturo, setValorFuturo] = useState<number | null >(null);
+    const [valorFuturo, setValorFuturo] = useState<number | null>(null);
     const [valorCapital, setValorCapital] = useState<number | null>(null);
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
@@ -50,7 +50,7 @@ export function ComponentInterestSimple() {
         setValorFuturo(null);
         setTimeC(null);
         let tiempo = 0;
-        
+
         let filledFields = 0; // Contador de campos llenos
 
 
@@ -85,9 +85,9 @@ export function ComponentInterestSimple() {
             if (data.capital && data.interestRate && tiempo) {
                 setValorFuturo(InterestSimple.calculateFutureValue(data, tiempo, isChecked));
 
-                if(isChecked){
+                if (isChecked) {
                     setImagen(capitalFinalImage);
-                }else{
+                } else {
                     setImagen(interesProducidoImage);
                 }
 
@@ -104,6 +104,10 @@ export function ComponentInterestSimple() {
                 setTimeC(result);
                 setImagen(tiempoImage);
             }
+        }
+        else {
+            // Manejar caso de condiciones no válidas, por ejemplo, mostrar un mensaje de error.
+            console.error("Las condiciones ingresadas no son válidas para realizar los cálculos de interés compuesto.");
         }
     };
     console.log(valorFuturo);
@@ -181,24 +185,24 @@ export function ComponentInterestSimple() {
                         <Spacer y={1} />
                         <Row align='center'>
                             {timeC !== null ? (
-                                    <Calendar />
-                                ) : valorFuturo !== null ? (
-                                    <Dollar />
-                                ) : valorCapital !== null ? (
-                                    <Percentage />
-                                ) : (
-                                    <Dollar />
-                                )}
+                                <Calendar />
+                            ) : valorFuturo !== null ? (
+                                <Dollar />
+                            ) : valorCapital !== null ? (
+                                <Percentage />
+                            ) : (
+                                <Dollar />
+                            )}
                             <Spacer x={0.5} />
                             <Text size={20}>
                                 {timeC !== null
                                     ? `${timeC.años} años, ${timeC.meses} meses, ${timeC.días} días`
-                                    : valorFuturo !== null 
-                                        ? valorFuturo % 1 === 0 ?  parseInt(valorFuturo.toFixed(0))
-                                        : parseFloat(valorFuturo.toFixed(2))
+                                    : valorFuturo !== null
+                                        ? valorFuturo % 1 === 0 ? parseInt(valorFuturo.toFixed(0))
+                                            : parseFloat(valorFuturo.toFixed(2))
                                         : valorCapital !== null
-                                            ? valorCapital % 1 === 0 ?  parseInt(valorCapital.toFixed(0))
-                                            : parseFloat(valorCapital.toFixed(2))
+                                            ? valorCapital % 1 === 0 ? parseInt(valorCapital.toFixed(0))
+                                                : parseFloat(valorCapital.toFixed(2))
                                             : '---'}
                             </Text>
                         </Row>
