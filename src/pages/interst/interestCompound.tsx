@@ -3,6 +3,10 @@ import { Select, Option } from '../../styled-component/Select';
 import { useForm } from "react-hook-form";
 import { ReactComponent as Dollar } from "../../assets/icons/dollar.svg";
 import { Checkbox } from 'antd';
+import capitalImage from '../../assets/image/compuesto/capitalCompuesto.png';
+import capitalFinalImage from '../../assets/image/compuesto/montoCompuesto.png';
+import tiempoImage from '../../assets/image/compuesto/TiempoCompuesto.png';
+import tasaInteresImage from '../../assets/image/compuesto/tasaInteresCompuesto.png';
 import { InterestCompound as IC } from '../../domain/InterestCompoundC';
 import React, { useState } from 'react';
 
@@ -32,7 +36,9 @@ export function InterestCompound() {
     };
 
 
-    const [valorFuturo, setValorFuturo] = useState<number | null>(null);
+    const [valorFuturo, setValorFuturo] = useState<number | null >(null);
+    const [imagen, setImagen] = useState<string>('');
+
     const onSubmit = (data: FormData) => {
         let tiempo = 0;
         switch (tiempoType) {
@@ -57,9 +63,11 @@ export function InterestCompound() {
                 };
                 if(isChecked){
                     setValorFuturo(IC.calculateTotalCapital(interestData, tiempo));
+                    setImagen(capitalFinalImage);
                 }
                 else{
                     setValorFuturo(IC.calculateInterestEarned(interestData, tiempo));
+                    setImagen(capitalImage);
 
                 }
             }
@@ -69,6 +77,7 @@ export function InterestCompound() {
                     interestRate: data.interestRate,
                 };
                 setValorFuturo(IC.calculateInitialInvestment(timeData, tiempo));
+                setImagen(tiempoImage);
             }
 
             if (data.capital && data.interestEarned) {
@@ -77,6 +86,7 @@ export function InterestCompound() {
                     futureValue: data.interestEarned,
                 };
                 setValorFuturo(IC.calculateInterestRate(interestData, tiempo));
+                setImagen(tasaInteresImage);
             }
         } else {
             // Manejar caso de condiciones no válidas, por ejemplo, mostrar un mensaje de error.
@@ -145,9 +155,12 @@ export function InterestCompound() {
                 </Container>
                 <Spacer x={2} />
                 <Col>
-                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%', marginBottom: '2.5rem' }}>
+                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '5% 8%', marginBottom: '2.5rem' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Formula</Text>
-                        {/* <img src="src\assets\capital.png" alt="Fórmula" width="50%" height="auto" /> */}
+                        {<img
+                            src={imagen}
+                            style={{ width: "100%", height: "auto", marginTop: "0%", marginLeft: '0%' }}
+                        />}
                     </Col>
                     <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>

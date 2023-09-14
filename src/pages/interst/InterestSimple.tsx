@@ -173,10 +173,8 @@ export function ComponentInterestSimple() {
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Formula</Text>
                         {<img
                             src={imagen}
-                            alt="imag"
                             style={{ width: "100%", height: "auto", marginTop: "0%", marginLeft: '0%' }}
                         />}
-
                     </Col>
                     <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
