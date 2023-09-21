@@ -93,6 +93,13 @@ export function InterestCompound() {
                 };
                 setValorFuturo(IC.calculateInterestRate(interestData, tiempo));
                 setImagen(tasaInteresImage);
+            } if (data.interestEarned && data.interestRate) {
+                const timeData = {
+                    futureValue: data.interestEarned,
+                    interestRate: data.interestRate,
+                };
+                setValorFuturo(IC.calculateInitialInvestment(timeData, tiempo));
+                setImagen(capitalImage);
             } if (data.interestEarned && data.interestRate && data.capital) {
                 const timeData = {
                     capital: data.capital,
@@ -102,12 +109,8 @@ export function InterestCompound() {
                 const timeInDays = IC.calculateTime(timeData, "days"); // Supongo que quieres mostrar el tiempo en días
                 setValorFuturo(timeInDays);
                 setImagen(tiempoImage);
-            }
-        }
-
-        if (tiempo > 0) {
-
-        } else {
+            } 
+        }else {
             // Manejar caso de condiciones no válidas, por ejemplo, mostrar un mensaje de error.
             console.error("Las condiciones ingresadas no son válidas para realizar los cálculos de interés compuesto.");
         }
