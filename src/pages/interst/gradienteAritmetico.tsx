@@ -41,6 +41,14 @@ interface FormData {
 
 export function ComponentGradienteArtmetico() {
     
+    const optionss: Option[] = [
+        { value: 'annual', label: 'anual' },
+        { value: 'bimonthly', label: 'bimestral' },
+        { value: 'quarterly', label: 'trimestral' },
+        { value: 'semiannual', label: 'semestral' },
+        { value: 'months', label: 'mensual' },
+    ];
+    
     const options: Option[] = [
         { value: 'valorPresente', label: 'Valor Presente' },
         { value: 'valorPresenteAnticipado', label: 'Valor Presente Anticipado' },
@@ -64,6 +72,7 @@ export function ComponentGradienteArtmetico() {
     const [imagen, setImagen] = useState<string>('');
 
     const [selectedOption, setSelectedOption] = useState('valorFuturo'); // Estado para la opción seleccionada
+    const [selectedOptions, setSelectedOptions] = useState('mensual'); // Estado para la opción seleccionada
 
     const handleOptionChange = (selectedValue: string) => {
         setSelectedOption(selectedValue);
@@ -174,13 +183,18 @@ export function ComponentGradienteArtmetico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input  {...register("tasaCrecimiento")} min="0" clearable label="Tasa de crecimiento" type='number' width='10rem' />
                                     <Spacer y={1} />
-                                    <Select >
-                                        {options.map((option) => (
-                                            <Option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </Option>
-                                        ))}
+                                    <Select
+                                        value={selectedOptions}
+                                        onChange={(e) => setSelectedOptions(e.target.value)}
+                                    >   
+                                        {/* <Option value="Default">elija una opcion</Option> */}
+                                        <Option value="mensual">Mensual</Option>
+                                        <Option value="trimestral">Trimestral</Option>
+                                        <Option value="semestral">Semestral</Option>
+                                        <Option value="Anual">Anual</Option>
                                     </Select>
+
+                                    <Spacer x={0.6} />
                                     </Row>
                                 <Spacer y={1} />
                                 <Button color="success" auto type="submit" css={{ fontFamily: 'Didact Gothic', width: '8rem', fontSize: '1rem' }}>
