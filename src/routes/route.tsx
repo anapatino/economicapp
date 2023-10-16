@@ -2,13 +2,14 @@ import {App} from "../App";
 import Dashboard from "../pages/dashboard";
 import { ComponentInterestSimple } from "../pages/interst/InterestSimple";
 import { InterestCompound } from "../pages/interst/interestCompound";
-import { GradienteAritmetico } from "../pages/interst/gradienteAritmetico";
+import { ComponentGradienteArtmetico } from "../pages/interst/gradienteAritmetico";
+import { ComponentGradienteGeometrico } from "../pages/interst/gradienteGeometrico";
+
 import Home from "../pages/home";
 import {
     createBrowserRouter
   } from "react-router-dom";
-import { GradienteGeometrico } from "../pages/interst/gradienteGeometrico";
-// import { GradienteAritmetico } from "../domain/GradienteAritmetico";
+
   
  export const router = createBrowserRouter([
     {
@@ -33,11 +34,11 @@ import { GradienteGeometrico } from "../pages/interst/gradienteGeometrico";
             },
             {
               path: "gradiente-aritmetico/",
-              element: <GradienteAritmetico />,
+              element: <ComponentGradienteArtmetico />,
             },
             {
               path: "gradiente-geometrico/",
-              element: <GradienteGeometrico />,
+              element: <ComponentGradienteGeometrico />,
             },
           ]
         },

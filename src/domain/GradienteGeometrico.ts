@@ -1,12 +1,19 @@
 
-export class GradienteAritmetico {
-    static calcularValorPresenteGradienteGeometrico(A: number, G: number, i: number, n: number): number {
-        if (G !== i) {
-            return (A / (G - i)) + ((Math.pow(1 + G, n) / Math.pow(1 + i, n)) - 1);
+export class GradienteGeometrico {
+    // 
+    static calcularValorPresenteGradienteGeometrico(primerPago: number, tasaCrecimiento: number, tasaInteres: number, numeroPeriodos: number): number {
+        if (tasaCrecimiento == tasaInteres) {
+          // Cuando G es igual a i
+          const valorPresente = (primerPago / (1 - tasaInteres)) * numeroPeriodos;
+          return valorPresente;
         } else {
-            return (n * A) / (1 + i);
+          // Cuando G es diferente de i
+          const denominador = 1 - tasaCrecimiento;
+          const factorDescuento = Math.pow((1 + tasaCrecimiento) / (1 + tasaInteres), numeroPeriodos);
+          const valorPresente = (primerPago / denominador) * (1 - factorDescuento);
+          return valorPresente;
         }
-    }
+      }
 
     static calcularValorFuturoGradienteGeometrico(A: number, G: number, i: number, n: number): number {
         if (G !== i) {

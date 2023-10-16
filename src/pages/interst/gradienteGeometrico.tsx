@@ -1,9 +1,7 @@
 import { Spacer, Text, Container, Col, Row, Input, Button } from '@nextui-org/react';
 import { Select, Option } from '../../styled-component/Select';
 import { useForm } from "react-hook-form";
-import { ReactComponent as Dollar } from "../../assets/icons/dollar.svg";
-import { ReactComponent as Calendar } from "../../assets/icons/calendar.svg";
-import { ReactComponent as Percentage } from "../../assets/icons/percentage.svg";
+
 import capitalImage from '../../assets/image/capital.png';
 import capitalFinalImage from '../../assets/image/capitalFinal.png';
 import tiempoImage from '../../assets/image/tiempo.png';
@@ -11,7 +9,9 @@ import interesProducidoImage from '../../assets/image/interesProducido.png';
 import tasaInteresImage from '../../assets/image/tasaInteres.png';
 import { Checkbox } from 'antd';
 import { InterestSimple } from '../../domain/InterestSimple';
+import { GradienteGeometrico } from '../../domain/GradienteGeometrico';
 import React, { useState } from 'react';
+import { GradienteAritmetico } from '../../domain/GradienteAritmetico';
 
 
 interface Option {
@@ -31,9 +31,14 @@ interface FormData {
     customYears: number;
     tiempo: number;
     typeInterest: string;
+
+    primerPago: number;
+    tasaCrecimiento: number;
+    tasaInteres: number;
+    numeroPeriodos: number;
 }
 
-export function GradienteGeometrico() {
+export function ComponentGradienteGeometrico() {
     const options: Option[] = [
         { value: 'annual', label: 'anual' },
         { value: 'bimonthly', label: 'bimestral' },
@@ -78,49 +83,32 @@ export function GradienteGeometrico() {
             default:
                 break;
         }
+        const valorPresente = GradienteGeometrico.calcularValorPresenteGradienteGeometrico(
+            data.primerPago,
+            data.tasaCrecimiento,
+            data.tasaInteres,
+            data.numeroPeriodos
+        );
+        const valorFuturo = GradienteGeometrico.calcularValorFuturoGradienteGeometrico(
+            data.primerPago,
+            data.tasaCrecimiento,
+            data.tasaInteres,
+            data.numeroPeriodos
+        );
 
-        if (tiempo > 0) {
-            filledFields++;
-        }
-        if (data.interestRate) {
-            filledFields++;
-        }
-        if (data.interestEarned) {
-            filledFields++;
-        }
-        if (data.capital) {
-            filledFields++;
-        }
+        setValorFuturo(valorFuturo);
+        setValorCapital(valorPresente);
 
-        if (filledFields === 3) {
-            if (data.capital && data.interestRate && tiempo) {
-                setValorFuturo(InterestSimple.calculateFutureValue(data, tiempo, isChecked));
+        
 
-                if (isChecked) {
-                    setImagen(capitalFinalImage);
-                } else {
-                    setImagen(interesProducidoImage);
-                }
 
-            } else if (data.interestEarned && data.interestRate && tiempo) {
-                setValorFuturo(InterestSimple.calculateCapital(data, tiempo));
-                setImagen(capitalImage);
-            }
-            if (data.capital && data.interestEarned && tiempo) {
-                setValorCapital(InterestSimple.calculateInterestRate(data, tiempo));
-                setImagen(tasaInteresImage);
-            }
-            if (data.capital && data.interestEarned && data.interestRate) {
-                const result = InterestSimple.calculateTime(data, "days");
-                setTimeC(result);
-                setImagen(tiempoImage);
-            }
-        }
+
+
     };
-    console.log(valorFuturo);
+    // console.log(valorFuturo);
     return (
         <Col css={{ padding: '2rem' }}>
-            <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Geometrico</Text>
+            <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Aritmetico</Text>
             <Spacer y={1.2} />
             <Row justify='space-between' css={{ width: '100%' }}>
                 <Container css={{ width: '99%', height: '25rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '2rem' }}>
@@ -154,7 +142,7 @@ export function GradienteGeometrico() {
                                 </Row>
                                 <Spacer y={0.7} />
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
-                                    <Input {...register("capital")} min="0" clearable label="Capital" type='number' width='20.7rem' />
+                                    <Input {...register("primerPago")} min="0" clearable label="primer pago" type='number' width='20.7rem' />
                                     <Spacer x={2} />
                                     <Checkbox
                                         checked={isChecked}
@@ -166,10 +154,13 @@ export function GradienteGeometrico() {
                                 </Row>
 
                                 <Spacer y={0.7} />
-                                <Input  {...register("interestRate")} min="0" clearable label="Tasa de interes %" type='double' width='10rem' />
-                                <Spacer y={0.7} />
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
-                                    <Input  {...register("interestEarned")} min="0" clearable label="Gradiente aritmetico" type='number' width='10rem' />
+                                    <Input  {...register("tasaInteres")} min="0" clearable label="Tasa de interes %" type='double' width='10rem' />
+                                    <Spacer y={0.7} />
+                                    <Input  {...register("numeroPeriodos")} min="0" clearable label="numeroPeriodos" type='double' width='10rem' />
+                                </Row>
+                                <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
+                                    <Input  {...register("tasaCrecimiento")} min="0" clearable label="Tasa de crecimiento" type='number' width='10rem' />
                                     <Spacer y={1} />
                                     <Select >
                                         {options.map((option) => (
@@ -200,6 +191,12 @@ export function GradienteGeometrico() {
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
+                            {valorFuturo !== null && (
+                                <div>
+                                    <Text>Valor Futuro: {valorFuturo}</Text>
+                                    <Text>Valor Presente: {valorCapital}</Text>
+                                </div>
+                            )}
                         </Row>
                     </Col>
                 </Col>
