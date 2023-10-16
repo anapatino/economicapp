@@ -18,6 +18,7 @@ interface Option {
     value: string;
     label: string;
 }
+
 interface FormData {
     startDate: string;
     endDate: string;
@@ -38,17 +39,17 @@ interface FormData {
     numeroPeriodos: number;
 }
 
-export function ComponentGradienteGeometrico() {
+export function ComponentGradienteArtmetico() {
+    
     const options: Option[] = [
-        { value: 'annual', label: 'anual' },
-        { value: 'bimonthly', label: 'bimestral' },
-        { value: 'quarterly', label: 'trimestral' },
-        { value: 'semiannual', label: 'semestral' },
-        { value: 'months', label: 'mensual' },
+        { value: 'valorPresente', label: 'Valor Presente' },
+        { value: 'valorPresenteAnticipado', label: 'Valor Presente Anticipado' },
+        { value: 'valorFuturo', label: 'Valor Futuro' },
+        { value: 'valorFuturoAnticipado', label: 'Valor Futuro Anticipado' },
+        { value: 'valorPresenteInfinito', label: 'Valor presente Infinito' }
     ];
 
     const { register, handleSubmit } = useForm<FormData>();
-    const [tiempoType, setTiempoType] = useState('years');
 
     const [isChecked, setIsChecked] = useState(false);
 
@@ -57,55 +58,66 @@ export function ComponentGradienteGeometrico() {
     };
 
 
-    const [valorFuturo, setValorFuturo] = useState<number | null>(null);
+    const [resultado, setResultado] = useState<number | null>(null);
     const [valorCapital, setValorCapital] = useState<number | null>(null);
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
 
-    const onSubmit = (data: FormData) => {
-        setValorFuturo(null);
-        setTimeC(null);
-        let tiempo = 0;
+    const [selectedOption, setSelectedOption] = useState('valorFuturo'); // Estado para la opción seleccionada
 
-        let filledFields = 0; // Contador de campos llenos
-
-
-        switch (tiempoType) {
-            case 'years':
-                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 360);
-                break;
-            case 'months':
-                tiempo = (data.customMonths / 12) + (data.customDays / 360);
-                break;
-            case 'days':
-                tiempo = data.customDays / 360;
-                break;
-            default:
-                break;
-        }
-        const valorPresente = GradienteGeometrico.calcularValorPresenteGradienteGeometrico(
-            data.primerPago,
-            data.tasaCrecimiento,
-            data.tasaInteres,
-            data.numeroPeriodos
-        );
-        const valorFuturo = GradienteGeometrico.calcularValorFuturoGradienteGeometrico(
-            data.primerPago,
-            data.tasaCrecimiento,
-            data.tasaInteres,
-            data.numeroPeriodos
-        );
-
-        setValorFuturo(valorFuturo);
-        setValorCapital(valorPresente);
-
-        
-
-
-
-
+    const handleOptionChange = (selectedValue: string) => {
+        setSelectedOption(selectedValue);
     };
-    // console.log(valorFuturo);
+
+    const onSubmit = (data: FormData) => {
+        setResultado(null);
+        setTimeC(null);
+
+        const tasaInteresDecimal = data.tasaInteres / 100; // Convertir la tasa de interés a decimal
+
+        // Calcula el resultado según la opción seleccionada
+        let resultado = null;
+
+        if (selectedOption === 'valorPresente') {
+            resultado = GradienteAritmetico.calcularValorPresente(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.numeroPeriodos,
+                data.tasaCrecimiento
+            );
+        } else if (selectedOption === 'valorPresenteAnticipado') {
+            resultado = GradienteAritmetico.calcularValorPresenteAnticipado(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.numeroPeriodos,
+                data.tasaCrecimiento
+            );
+        } else if (selectedOption === 'valorFuturo') {
+            resultado = GradienteAritmetico.calcularValorFuturo(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.numeroPeriodos,
+                data.tasaCrecimiento
+            );
+        } else if (selectedOption === 'valorFuturoAnticipado') {
+            resultado = GradienteAritmetico.calcularValorFuturoAnticipado(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.numeroPeriodos,
+                data.tasaCrecimiento
+            );
+        } else if (selectedOption === 'valorPresenteInfinito') {
+            resultado = GradienteAritmetico.calcularValorPresenteInfinito(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.tasaCrecimiento
+            );
+        }
+
+        // Actualiza el estado de resultado
+        setResultado(resultado);
+    };
+
     return (
         <Col css={{ padding: '2rem' }}>
             <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Aritmetico</Text>
@@ -116,29 +128,29 @@ export function ComponentGradienteGeometrico() {
                         <Col>
                             <Col css={{ marginLeft: '2rem' }}>
                                 <Row>
-                                    <Select
-                                        value={tiempoType}
-                                        onChange={(e) => setTiempoType(e.target.value)}
-                                    >
-                                        <Option value="years">Años</Option>
-                                        <Option value="months">Meses</Option>
-                                        <Option value="days">Días</Option>
+                                <Select
+                                        value={selectedOption}
+                                        onChange={(e) => setSelectedOption(e.target.value)}
+                                    >   <Option value="Default">elija una opcion</Option>
+                                        <Option value="valorPresente">Valor Presente</Option>
+                                        <Option value="valorPresenteAnticipado">Valor Presente Anticipado</Option>
+                                        <Option value="valorFuturo">Valor Futuro</Option>
+                                        <Option value="valorFuturoAnticipado">Valor Futuro Anticipado</Option>
+                                        <Option value="valorPresenteInfinito">Valor Presente Infinito</Option>
+                                       
                                     </Select>
-                                    <Spacer x={0.6} />
-                                    <Row>
-                                        {tiempoType === 'years' ? (
 
-                                            <Input {...register('customYears')} min="0" clearable label="Años" type="number" width="8rem" defaultValue={0} />
-                                        ) : ""}
-                                        <Spacer x={0.6} />
-                                        {tiempoType === 'months' || tiempoType === 'years' ? (
-                                            <Input {...register('customMonths')} min="0" clearable label="Meses" type="number" width="8rem" defaultValue={0} />
-                                        ) : ""}
-                                        <Spacer x={0.6} />
-                                        {tiempoType === 'months' || tiempoType === 'days' || tiempoType === 'years' ? (
-                                            <Input {...register('customDays')} min="0" clearable label="Días" type="number" width="8rem" defaultValue={0} />
-                                        ) : ""}
-                                    </Row>
+                                    <Spacer x={0.6} />
+                                    {/* <Select >
+                                        {options.map((option) => (
+                                            <Option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </Option>
+                                        ))}
+                                    </Select> */}
+                                    
+                                    <Spacer x={0.6} />
+                                   
                                 </Row>
                                 <Spacer y={0.7} />
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
@@ -157,7 +169,7 @@ export function ComponentGradienteGeometrico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input  {...register("tasaInteres")} min="0" clearable label="Tasa de interes %" type='double' width='10rem' />
                                     <Spacer y={0.7} />
-                                    <Input  {...register("numeroPeriodos")} min="0" clearable label="numeroPeriodos" type='double' width='10rem' />
+                                    <Input  {...register("numeroPeriodos")} min="0" clearable label="Numero periodos" type='double' width='10rem' />
                                 </Row>
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input  {...register("tasaCrecimiento")} min="0" clearable label="Tasa de crecimiento" type='number' width='10rem' />
@@ -168,7 +180,8 @@ export function ComponentGradienteGeometrico() {
                                                 {option.label}
                                             </Option>
                                         ))}
-                                    </Select></Row>
+                                    </Select>
+                                    </Row>
                                 <Spacer y={1} />
                                 <Button color="success" auto type="submit" css={{ fontFamily: 'Didact Gothic', width: '8rem', fontSize: '1rem' }}>
                                     Calcular
@@ -191,10 +204,10 @@ export function ComponentGradienteGeometrico() {
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
-                            {valorFuturo !== null && (
+                            {resultado !== null && (
                                 <div>
-                                    <Text>Valor Futuro: {valorFuturo}</Text>
-                                    <Text>Valor Presente: {valorCapital}</Text>
+                                    <Text>Valor de la maquina: {resultado}</Text>
+                                    {/* Valor Futuro es el resultado del cálculo */}
                                 </div>
                             )}
                         </Row>

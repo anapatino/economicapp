@@ -53,4 +53,35 @@ export class GradienteAritmetico {
         return valorFuturo;
     }
 
+    static calcularValorFuturoAnticipado(
+        primeraCuota: number,
+        interes: number,
+        numeroPeriodos: number,
+        tasaCrecimiento: number
+    ): number {
+        const factor1 =
+            (Number(primeraCuota) * ((Math.pow(1 + interes, numeroPeriodos) - 1) / interes));
+
+        const factor2 =  (tasaCrecimiento/interes)*(((Math.pow(1 + interes, numeroPeriodos) - 1) / interes)-numeroPeriodos);
+        console.log(`El Factor 1 es: ${factor1}`);
+        console.log(`El Factor 2 es: ${factor2}`);
+        
+        
+
+        const valorFuturo = (factor1 + factor2)*(1+interes);
+        return valorFuturo;
+    }
+
+    static calcularValorPresenteInfinito(
+        primeraCuota: number,
+        interes: number,
+        tasaCrecimiento: number
+    ): number {
+        const factor1 = (primeraCuota/interes);
+        const factor2 =  tasaCrecimiento/(Math.pow(interes, 2));
+        console.log(`INFINITO: ${factor2}`);
+        const valorFuturo = (factor1 + factor2);
+        return valorFuturo;
+    }
+
 }

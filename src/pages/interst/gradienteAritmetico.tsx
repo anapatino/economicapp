@@ -40,21 +40,16 @@ interface FormData {
 }
 
 export function ComponentGradienteArtmetico() {
+    
     const options: Option[] = [
-        { value: 'annual', label: 'anual' },
-        { value: 'bimonthly', label: 'bimestral' },
-        { value: 'quarterly', label: 'trimestral' },
-        { value: 'semiannual', label: 'semestral' },
-        { value: 'months', label: 'mensual' },
-    ];
-    const optionss: Option[] = [
         { value: 'valorPresente', label: 'Valor Presente' },
+        { value: 'valorPresenteAnticipado', label: 'Valor Presente Anticipado' },
         { value: 'valorFuturo', label: 'Valor Futuro' },
+        { value: 'valorFuturoAnticipado', label: 'Valor Futuro Anticipado' },
         { value: 'valorPresenteInfinito', label: 'Valor presente Infinito' }
     ];
 
     const { register, handleSubmit } = useForm<FormData>();
-    const [tiempoType, setTiempoType] = useState('years');
 
     const [isChecked, setIsChecked] = useState(false);
 
@@ -63,40 +58,66 @@ export function ComponentGradienteArtmetico() {
     };
 
 
-    const [valorFuturo, setValorFuturo] = useState<number | null>(null);
+    const [resultado, setResultado] = useState<number | null>(null);
     const [valorCapital, setValorCapital] = useState<number | null>(null);
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
 
-    const onSubmit = (data: FormData) => {
-        setValorFuturo(null);
-        setTimeC(null);
-        let tiempo = 0;
+    const [selectedOption, setSelectedOption] = useState('valorFuturo'); // Estado para la opción seleccionada
 
-        const valorPresente = GradienteAritmetico.calcularValorPresente(
-            data.primerPago,
-            data.tasaInteres / 100, // Convertir la tasa de interés a decimal
-            data.numeroPeriodos,
-            data.tasaCrecimiento
-        );
-        
-        const valorFuturo = GradienteAritmetico.calcularValorFuturo(
-            data.primerPago,
-            data.tasaInteres / 100, // Convertir la tasa de interés a decimal
-            data.numeroPeriodos,
-            data.tasaCrecimiento
-        );
-
-        setValorFuturo(valorFuturo); // Actualizamos el valor de valorFuturo con el resultado
-        console.log(`El valor de la maquina: ${valorFuturo}`);
-
+    const handleOptionChange = (selectedValue: string) => {
+        setSelectedOption(selectedValue);
     };
-    // const primeraCuota = 150000; // Pago constante
-    // const tasaCrecimiento = 10000;  // Pago de gradiente aritmético
-    // const interes = 0.03; // Tasa de interés (5%)
-    // const numeroPeriodos = 24;    // Número de períodos Meses
-    // const resultado = calcularValorPresente( primeraCuota,interes,numeroPeriodos, tasaCrecimiento);
-    // console.log(`El valor presente es: ${resultado.toFixed(2)}`);
+
+    const onSubmit = (data: FormData) => {
+        setResultado(null);
+        setTimeC(null);
+
+        const tasaInteresDecimal = data.tasaInteres / 100; // Convertir la tasa de interés a decimal
+
+        // Calcula el resultado según la opción seleccionada
+        let resultado = null;
+
+        if (selectedOption === 'valorPresente') {
+            resultado = GradienteAritmetico.calcularValorPresente(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.numeroPeriodos,
+                data.tasaCrecimiento
+            );
+        } else if (selectedOption === 'valorPresenteAnticipado') {
+            resultado = GradienteAritmetico.calcularValorPresenteAnticipado(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.numeroPeriodos,
+                data.tasaCrecimiento
+            );
+        } else if (selectedOption === 'valorFuturo') {
+            resultado = GradienteAritmetico.calcularValorFuturo(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.numeroPeriodos,
+                data.tasaCrecimiento
+            );
+        } else if (selectedOption === 'valorFuturoAnticipado') {
+            resultado = GradienteAritmetico.calcularValorFuturoAnticipado(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.numeroPeriodos,
+                data.tasaCrecimiento
+            );
+        } else if (selectedOption === 'valorPresenteInfinito') {
+            resultado = GradienteAritmetico.calcularValorPresenteInfinito(
+                data.primerPago,
+                tasaInteresDecimal,
+                data.tasaCrecimiento
+            );
+        }
+
+        // Actualiza el estado de resultado
+        setResultado(resultado);
+    };
+
     return (
         <Col css={{ padding: '2rem' }}>
             <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Aritmetico</Text>
@@ -107,36 +128,29 @@ export function ComponentGradienteArtmetico() {
                         <Col>
                             <Col css={{ marginLeft: '2rem' }}>
                                 <Row>
-                                    <Select >
-                                        {optionss.map((option) => (
+                                <Select
+                                        value={selectedOption}
+                                        onChange={(e) => setSelectedOption(e.target.value)}
+                                    >   <Option value="Default">elija una opcion</Option>
+                                        <Option value="valorPresente">Valor Presente</Option>
+                                        <Option value="valorPresenteAnticipado">Valor Presente Anticipado</Option>
+                                        <Option value="valorFuturo">Valor Futuro</Option>
+                                        <Option value="valorFuturoAnticipado">Valor Futuro Anticipado</Option>
+                                        <Option value="valorPresenteInfinito">Valor Presente Infinito</Option>
+                                       
+                                    </Select>
+
+                                    <Spacer x={0.6} />
+                                    {/* <Select >
+                                        {options.map((option) => (
                                             <Option key={option.value} value={option.value}>
                                                 {option.label}
                                             </Option>
                                         ))}
-                                    </Select>
-                                    {/* <Select
-                                        value={tiempoType}
-                                        onChange={(e) => setTiempoType(e.target.value)}
-                                    >
-                                        <Option value="years">Años</Option>
-                                        <Option value="months">Meses</Option>
-                                        <Option value="days">Días</Option>
                                     </Select> */}
+                                    
                                     <Spacer x={0.6} />
-                                    {/* <Row>
-                                        {tiempoType === 'years' ? (
-
-                                            <Input {...register('customYears')} min="0" clearable label="Años" type="number" width="8rem" defaultValue={0} />
-                                        ) : ""}
-                                        <Spacer x={0.6} />
-                                        {tiempoType === 'months' || tiempoType === 'years' ? (
-                                            <Input {...register('customMonths')} min="0" clearable label="Meses" type="number" width="8rem" defaultValue={0} />
-                                        ) : ""}
-                                        <Spacer x={0.6} />
-                                        {tiempoType === 'months' || tiempoType === 'days' || tiempoType === 'years' ? (
-                                            <Input {...register('customDays')} min="0" clearable label="Días" type="number" width="8rem" defaultValue={0} />
-                                        ) : ""}
-                                    </Row> */}
+                                   
                                 </Row>
                                 <Spacer y={0.7} />
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
@@ -190,9 +204,9 @@ export function ComponentGradienteArtmetico() {
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
-                            {valorFuturo !== null && (
+                            {resultado !== null && (
                                 <div>
-                                    <Text>Valor de la maquina: {valorFuturo}</Text>
+                                    <Text>Valor de la maquina: {resultado}</Text>
                                     {/* Valor Futuro es el resultado del cálculo */}
                                 </div>
                             )}
