@@ -39,7 +39,7 @@ interface FormData {
     numeroPeriodos: number;
 }
 
-export function ComponentGradienteArtmetico() {
+export function ComponentGradienteGeometrico() {
     
     const options: Option[] = [
         { value: 'valorPresente', label: 'Valor Presente' },
