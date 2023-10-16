@@ -87,7 +87,7 @@ export function ComponentGradienteArtmetico() {
             data.tasaCrecimiento
         );
 
-        setValorFuturo(valorPresente); // Actualizamos el valor de valorFuturo con el resultado
+        setValorFuturo(valorFuturo); // Actualizamos el valor de valorFuturo con el resultado
         console.log(`El valor de la maquina: ${valorFuturo}`);
 
     };
