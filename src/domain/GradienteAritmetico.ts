@@ -75,7 +75,8 @@ export class GradienteAritmetico {
     static calcularValorPresenteInfinito(
         primeraCuota: number,
         interes: number,
-        tasaCrecimiento: number
+        tasaCrecimiento: number,
+        // numeroPeriodos: number,
     ): number {
         const factor1 = (primeraCuota/interes);
         const factor2 =  tasaCrecimiento/(Math.pow(interes, 2));

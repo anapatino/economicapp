@@ -64,6 +64,7 @@ export function ComponentGradienteGeometrico() {
     const [imagen, setImagen] = useState<string>('');
 
     const [selectedOption, setSelectedOption] = useState('valorFuturo'); // Estado para la opción seleccionada
+    const [selectedOptions, setSelectedOptions] = useState('mensual'); // Estado para la opción seleccionada
 
     const handleOptionChange = (selectedValue: string) => {
         setSelectedOption(selectedValue);
@@ -74,16 +75,17 @@ export function ComponentGradienteGeometrico() {
         setTimeC(null);
 
         const tasaInteresDecimal = data.tasaInteres / 100; // Convertir la tasa de interés a decimal
-
+        const tasaCrecimientoDecimal = data.tasaCrecimiento / 100;
         // Calcula el resultado según la opción seleccionada
         let resultado = null;
 
         if (selectedOption === 'valorPresente') {
-            resultado = GradienteAritmetico.calcularValorPresente(
+            resultado = GradienteGeometrico.calcularValorPresenteGradienteGeometrico(
                 data.primerPago,
                 tasaInteresDecimal,
+                tasaCrecimientoDecimal,
                 data.numeroPeriodos,
-                data.tasaCrecimiento
+               
             );
         } else if (selectedOption === 'valorPresenteAnticipado') {
             resultado = GradienteAritmetico.calcularValorPresenteAnticipado(
@@ -93,11 +95,11 @@ export function ComponentGradienteGeometrico() {
                 data.tasaCrecimiento
             );
         } else if (selectedOption === 'valorFuturo') {
-            resultado = GradienteAritmetico.calcularValorFuturo(
+            resultado = GradienteGeometrico.calcularValorFuturoGradienteGeometrico(
                 data.primerPago,
                 tasaInteresDecimal,
+                tasaCrecimientoDecimal,
                 data.numeroPeriodos,
-                data.tasaCrecimiento
             );
         } else if (selectedOption === 'valorFuturoAnticipado') {
             resultado = GradienteAritmetico.calcularValorFuturoAnticipado(
@@ -120,7 +122,7 @@ export function ComponentGradienteGeometrico() {
 
     return (
         <Col css={{ padding: '2rem' }}>
-            <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Aritmetico</Text>
+            <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Geometrico</Text>
             <Spacer y={1.2} />
             <Row justify='space-between' css={{ width: '100%' }}>
                 <Container css={{ width: '99%', height: '25rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '2rem' }}>
@@ -156,13 +158,13 @@ export function ComponentGradienteGeometrico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input {...register("primerPago")} min="0" clearable label="primer pago" type='number' width='20.7rem' />
                                     <Spacer x={2} />
-                                    <Checkbox
+                                    {/* <Checkbox
                                         checked={isChecked}
                                         onChange={(e) => handleCheckboxChange(e.target.checked)}
                                         style={{ marginLeft: '0.001%' }}
                                     >
                                         Mostrar monto final
-                                    </Checkbox>
+                                    </Checkbox> */}
                                 </Row>
 
                                 <Spacer y={0.7} />
@@ -174,12 +176,15 @@ export function ComponentGradienteGeometrico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input  {...register("tasaCrecimiento")} min="0" clearable label="Tasa de crecimiento" type='number' width='10rem' />
                                     <Spacer y={1} />
-                                    <Select >
-                                        {options.map((option) => (
-                                            <Option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </Option>
-                                        ))}
+                                    <Select
+                                        value={selectedOptions}
+                                        onChange={(e) => setSelectedOptions(e.target.value)}
+                                    >   
+                                        {/* <Option value="Default">elija una opcion</Option> */}
+                                        <Option value="mensual">Mensual</Option>
+                                        <Option value="trimestral">Trimestral</Option>
+                                        <Option value="semestral">Semestral</Option>
+                                        <Option value="Anual">Anual</Option>
                                     </Select>
                                     </Row>
                                 <Spacer y={1} />

@@ -1,25 +1,41 @@
 
 export class GradienteGeometrico {
     // 
-    static calcularValorPresenteGradienteGeometrico(primerPago: number, tasaCrecimiento: number, tasaInteres: number, numeroPeriodos: number): number {
-        if (tasaCrecimiento == tasaInteres) {
-          // Cuando G es igual a i
-          const valorPresente = (primerPago / (1 - tasaInteres)) * numeroPeriodos;
-          return valorPresente;
-        } else {
-          // Cuando G es diferente de i
-          const denominador = 1 - tasaCrecimiento;
-          const factorDescuento = Math.pow((1 + tasaCrecimiento) / (1 + tasaInteres), numeroPeriodos);
-          const valorPresente = (primerPago / denominador) * (1 - factorDescuento);
-          return valorPresente;
-        }
-      }
+    static calcularValorPresenteGradienteGeometrico(
+        primeraCuota: number,
+        interes: number,
+        tasaCrecimiento: number,
+        numeroPeriodos: number
+    ): number {
 
-    static calcularValorFuturoGradienteGeometrico(A: number, G: number, i: number, n: number): number {
-        if (G !== i) {
-            return (A / (G - i)) + (Math.pow(1 + G, n) - Math.pow(1 + i, n));
+        // Cuando G es diferente de i
+        const factor1 = 1 - ((Math.pow(1 + tasaCrecimiento, numeroPeriodos)) / (Math.pow(1 + 0.0583, numeroPeriodos)));
+        const factor2 = 0.0583 - tasaCrecimiento;
+        console.log(`VALOR FACTOR 1: ${factor1.toFixed(2)}`);
+        const valorPresente = primeraCuota * (factor1) / factor2;
+        
+
+
+        //   const denominador = 1 - tasaCrecimiento;
+        //   const factorDescuento = Math.pow((1 + tasaCrecimiento) / (1 + tasaInteres), numeroPeriodos);
+        //   const valorPresente = (primerPago / denominador) * (1 - factorDescuento);
+        return valorPresente;
+
+    }
+
+    static calcularValorFuturoGradienteGeometrico(
+        primeraCuota: number,
+        interes: number,
+        tasaCrecimiento: number,
+        numeroPeriodos: number): number {
+        if (tasaCrecimiento !== interes) {
+            const factor1 = (Math.pow(1 + tasaCrecimiento, numeroPeriodos) );
+            const resultado = (primeraCuota / (tasaCrecimiento - interes)) * (Math.pow(1 + tasaCrecimiento, numeroPeriodos) - Math.pow(1 + interes, numeroPeriodos));
+            console.log(`El FUUUUUTURO: ${factor1.toFixed(2)}`);
+            return resultado;
+            
         } else {
-            return A / Math.pow(1 + i, -n + 1);
+            return primeraCuota / Math.pow(1 + interes, -numeroPeriodos + 1);
         }
     }
 

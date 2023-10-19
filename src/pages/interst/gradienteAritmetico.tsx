@@ -165,13 +165,13 @@ export function ComponentGradienteArtmetico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input {...register("primerPago")} min="0" clearable label="primer pago" type='number' width='20.7rem' />
                                     <Spacer x={2} />
-                                    <Checkbox
+                                    {/* <Checkbox
                                         checked={isChecked}
                                         onChange={(e) => handleCheckboxChange(e.target.checked)}
                                         style={{ marginLeft: '0.001%' }}
                                     >
                                         Mostrar monto final
-                                    </Checkbox>
+                                    </Checkbox> */}
                                 </Row>
 
                                 <Spacer y={0.7} />
