@@ -50,7 +50,6 @@ export class InterestCompound {
     if (interestRate !== 0) {
       time = Math.log(futureValue / capital) / Math.log(1 + interestRate / 100);
     }
-
     switch (showTime) {
       case "years":
         return Math.floor(time);

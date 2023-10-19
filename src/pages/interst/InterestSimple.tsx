@@ -41,7 +41,7 @@ export function ComponentInterestSimple() {
     };
 
 
-    const [valorFuturo, setValorFuturo] = useState<number | null >(null);
+    const [valorFuturo, setValorFuturo] = useState<number | null>(null);
     const [valorCapital, setValorCapital] = useState<number | null>(null);
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
@@ -50,19 +50,19 @@ export function ComponentInterestSimple() {
         setValorFuturo(null);
         setTimeC(null);
         let tiempo = 0;
-        
+
         let filledFields = 0; // Contador de campos llenos
 
 
         switch (tiempoType) {
             case 'years':
-                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 365);
+                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 360);
                 break;
             case 'months':
-                tiempo = (data.customMonths / 12) + (data.customDays / 365);
+                tiempo = (data.customMonths / 12) + (data.customDays / 360);
                 break;
             case 'days':
-                tiempo = data.customDays / 365;
+                tiempo = data.customDays / 360;
                 break;
             default:
                 break;
@@ -85,9 +85,9 @@ export function ComponentInterestSimple() {
             if (data.capital && data.interestRate && tiempo) {
                 setValorFuturo(InterestSimple.calculateFutureValue(data, tiempo, isChecked));
 
-                if(isChecked){
+                if (isChecked) {
                     setImagen(capitalFinalImage);
-                }else{
+                } else {
                     setImagen(interesProducidoImage);
                 }
 
@@ -104,6 +104,10 @@ export function ComponentInterestSimple() {
                 setTimeC(result);
                 setImagen(tiempoImage);
             }
+        }
+        else {
+            // Manejar caso de condiciones no válidas, por ejemplo, mostrar un mensaje de error.
+            console.error("Las condiciones ingresadas no son válidas para realizar los cálculos de interés compuesto.");
         }
     };
     console.log(valorFuturo);
@@ -133,7 +137,7 @@ export function ComponentInterestSimple() {
                                         ) : ""}
                                         <Spacer x={0.6} />
                                         {tiempoType === 'months' || tiempoType === 'years' ? (
-                                            <Input {...register('customMonths')} min="0" max="11" clearable label="Meses" type="number" width="8rem" defaultValue={0} />
+                                            <Input {...register('customMonths')} min="0" clearable label="Meses" type="number" width="8rem" defaultValue={0} />
                                         ) : ""}
                                         <Spacer x={0.6} />
                                         {tiempoType === 'months' || tiempoType === 'days' || tiempoType === 'years' ? (
@@ -169,38 +173,36 @@ export function ComponentInterestSimple() {
                 </Container>
                 <Spacer x={2} />
                 <Col>
-                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '5% 10%', marginBottom: '2.5rem' }}>
+                    <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '5% 8%', marginBottom: '2.5rem' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Formula</Text>
                         {<img
                             src={imagen}
-                            alt="imag"
                             style={{ width: "100%", height: "auto", marginTop: "0%", marginLeft: '0%' }}
                         />}
-
                     </Col>
                     <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%' }}>
                         <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
                         <Spacer y={1} />
                         <Row align='center'>
                             {timeC !== null ? (
-                                    <Calendar />
-                                ) : valorFuturo !== null ? (
-                                    <Dollar />
-                                ) : valorCapital !== null ? (
-                                    <Percentage />
-                                ) : (
-                                    <Dollar />
-                                )}
+                                <Calendar />
+                            ) : valorFuturo !== null ? (
+                                <Dollar />
+                            ) : valorCapital !== null ? (
+                                <Percentage />
+                            ) : (
+                                <Dollar />
+                            )}
                             <Spacer x={0.5} />
                             <Text size={20}>
                                 {timeC !== null
                                     ? `${timeC.años} años, ${timeC.meses} meses, ${timeC.días} días`
-                                    : valorFuturo !== null 
-                                        ? valorFuturo % 1 === 0 ?  parseInt(valorFuturo.toFixed(0))
-                                        : parseFloat(valorFuturo.toFixed(2))
+                                    : valorFuturo !== null
+                                        ? valorFuturo % 1 === 0 ? parseInt(valorFuturo.toFixed(0))
+                                            : parseFloat(valorFuturo.toFixed(2))
                                         : valorCapital !== null
-                                            ? valorCapital % 1 === 0 ?  parseInt(valorCapital.toFixed(0))
-                                            : parseFloat(valorCapital.toFixed(2))
+                                            ? valorCapital % 1 === 0 ? parseInt(valorCapital.toFixed(0))
+                                                : parseFloat(valorCapital.toFixed(2))
                                             : '---'}
                             </Text>
                         </Row>
