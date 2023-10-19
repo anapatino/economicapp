@@ -1,8 +1,8 @@
 export class TIR {
-  static calcularTIR(flujosDeEfectivo: number[], inversionInicial: number, iteraciones = 1000, tolerancia = 0.00001): number | undefined {
+  static calcularTIR(flujosDeEfectivo: number[], inversionInicial: number, iteraciones = 1000, tolerancia = 0.00001): number {
     let tasaBaja = 0;
     let tasaAlta = 1;
-    let tir: number | undefined;
+    let tir: number = 0; // Inicializado con un valor por defecto, ya que el tipo es number
 
     for (let i = 0; i < iteraciones; i++) {
       const tasaPromedio = (tasaBaja + tasaAlta) / 2;
@@ -18,6 +18,10 @@ export class TIR {
       } else {
         tasaAlta = tasaPromedio;
       }
+    }
+
+    if (isNaN(tir) || tir === Infinity || tir === -Infinity) {
+      throw new Error('No se pudo calcular la TIR');
     }
 
     return tir;
