@@ -1,11 +1,9 @@
 import { Spacer, Text, Container, Col, Row, Input, Button } from '@nextui-org/react';
 import { Select, Option } from '../../styled-component/Select';
-import { useForm } from "react-hook-form";
 import { ReactComponent as Dollar } from "../../assets/icons/dollar.svg";
 import { Checkbox } from 'antd';
-import { InterestCompound as IC } from '../../domain/InterestCompoundC';
 import React, { useState } from 'react';
-
+import { useForm } from "react-hook-form";
 
 interface FormData {
     startDate: string;
@@ -21,70 +19,18 @@ interface FormData {
     tiempo: number;
     typeInterest: string;
 }
-export function InterestCompound() {
+export function Gradient() {
     const { register, handleSubmit } = useForm<FormData>();
     const [tiempoType, setTiempoType] = useState('years');
-
+    const [valorFuturo, setValorFuturo] = useState<number | null >(null);
     const [isChecked, setIsChecked] = useState(false);
 
     const handleCheckboxChange = (checked: boolean) => {
         setIsChecked(checked);
     };
 
-
-    const [valorFuturo, setValorFuturo] = useState<number | null>(null);
     const onSubmit = (data: FormData) => {
-        let tiempo = 0;
-        switch (tiempoType) {
-            case 'years':
-                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 365);
-                break;
-            case 'months':
-                tiempo = (data.customMonths / 12) + (data.customDays / 365);
-                break;
-            case 'days':
-                tiempo = data.customDays / 365;
-                break;
-            default:
-                break;
-        }
-
-        if (tiempo > 0) {
-            if (data.capital && data.interestRate) {
-                const interestData = {
-                    capital: data.capital,
-                    interestRate: data.interestRate,
-                };
-                if(isChecked){
-                    setValorFuturo(IC.calculateTotalCapital(interestData, tiempo));
-                }
-                else{
-                    setValorFuturo(IC.calculateInterestEarned(interestData, tiempo));
-
-                }
-            }
-            if (data.interestEarned && data.interestRate) {
-                const timeData = {
-                    futureValue: data.interestEarned,
-                    interestRate: data.interestRate,
-                };
-                setValorFuturo(IC.calculateInitialInvestment(timeData, tiempo));
-            }
-
-            if (data.capital && data.interestRate && data.interestEarned) {
-                const interestData = {
-                    capital: data.capital,
-                    futureValue: data.interestEarned,
-                };
-                setValorFuturo(IC.calculateInterestRate(interestData, tiempo));
-            }
-        } else {
-            // Manejar caso de condiciones no válidas, por ejemplo, mostrar un mensaje de error.
-            console.error("Las condiciones ingresadas no son válidas para realizar los cálculos de interés compuesto.");
-        }
     };
-
-
 
     return (
         <Col css={{ padding: '2rem' }}>
