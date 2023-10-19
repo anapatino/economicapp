@@ -13,8 +13,9 @@ import { Outlet } from "react-router-dom";
     { key: 'interestCompound', name: 'Interes Compuesto',route:'interest-compound/' },
   ];
   const listSecond: Items[] = [
-    { key: 'gradienteAritmetico', name: 'gradiente aritmetico',route:'gradiente-aritmetico/' },
-    { key: 'gradienteGeometrico', name: 'gradiente geometrico',route:'gradiente-geometrico/' },
+    { key: 'gradienteAritmetico', name: 'Gradiente Aritmético',route:'gradiente-aritmetico/' },
+    { key: 'gradienteGeometrico', name: 'Gradiente Geométrico',route:'gradiente-geometrico/' },
+    { key: 'tir', name: 'Tasa Interna de Retorno',route:'tir/' },
   ];
 
   const listThird: Items[] = [

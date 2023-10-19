@@ -129,7 +129,7 @@ export function ComponentGradienteArtmetico() {
 
     return (
         <Col css={{ padding: '2rem' }}>
-            <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Aritmetico</Text>
+            <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Aritmético</Text>
             <Spacer y={1.2} />
             <Row justify='space-between' css={{ width: '100%' }}>
                 <Container css={{ width: '99%', height: '25rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '2rem' }}>
@@ -220,7 +220,7 @@ export function ComponentGradienteArtmetico() {
                         <Row align='center'>
                             {resultado !== null && (
                                 <div>
-                                    <Text>Valor de la maquina: {resultado}</Text>
+                                    <Text>{resultado}</Text>
                                     {/* Valor Futuro es el resultado del cálculo */}
                                 </div>
                             )}
