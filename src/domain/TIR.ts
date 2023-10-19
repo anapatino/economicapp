@@ -1,45 +1,29 @@
 export class TIR {
-  static calculateTIR(
-    cashFlows: number[],
-    initialInvestment: number,
-    iterations: number = 1000,
-    tolerance: number = 0.00001
-  ): number | undefined {
-    let lowerRate = 0;
-    let upperRate = 1;
-    let irr: number | undefined = undefined;
+  static calcularTIR(flujosDeEfectivo: number[], inversionInicial: number, iteraciones = 1000, tolerancia = 0.00001): number | undefined {
+    let tasaBaja = 0;
+    let tasaAlta = 1;
+    let tir: number | undefined;
 
-    for (let i = 0; i < iterations; i++) {
-      const averageRate = (lowerRate + upperRate) / 2;
-      let npv = -initialInvestment;
+    for (let i = 0; i < iteraciones; i++) {
+      const tasaPromedio = (tasaBaja + tasaAlta) / 2;
+      const vpn = -inversionInicial + flujosDeEfectivo.reduce((acumulador, flujo, j) => acumulador + flujo / Math.pow(1 + tasaPromedio, j + 1), 0);
 
-      for (let j = 0; j < cashFlows.length; j++) {
-        npv += cashFlows[j] / Math.pow(1 + averageRate, j + 1);
-      }
-
-      if (Math.abs(npv) < tolerance) {
-        irr = averageRate;
+      if (Math.abs(vpn) < tolerancia) {
+        tir = tasaPromedio;
         break;
       }
 
-      if (npv > 0) {
-        lowerRate = averageRate;
+      if (vpn > 0) {
+        tasaBaja = tasaPromedio;
       } else {
-        upperRate = averageRate;
+        tasaAlta = tasaPromedio;
       }
     }
 
-    return irr;
+    return tir;
   }
 
-  static calculateInitialInvestment(cashFlows: number[], tir: number): number {
-    let initialInvestment = 0;
-
-    for (let t = 0; t < cashFlows.length; t++) {
-      initialInvestment += cashFlows[t] / Math.pow(1 + tir / 100, t);
-    }
-    console.log(initialInvestment);
-
-    return initialInvestment;
+  static calcularInversionInicial(flujosDeEfectivo: number[], tir: number): number {
+    return flujosDeEfectivo.reduce((acumulador, flujo, t) => acumulador + flujo / Math.pow(1 + tir, t), 0);
   }
 }
