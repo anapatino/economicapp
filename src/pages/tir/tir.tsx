@@ -1,46 +1,56 @@
     import { Spacer, Text, Container, Col, Row, Input, Button } from '@nextui-org/react';
-    import { Select, Option } from '../../styled-component/Select';
     import { useForm } from 'react-hook-form';
     import { Checkbox } from 'antd';
     import React, { useState } from 'react';
-    import { TIR } from '../../domain/TIR'; // Reemplaza 'tu-ruta-al-archivo' con la ruta real
+    import { TIR } from '../../domain/TIR';
 
     interface FormData {
     primerPago: number;
     tasaCrecimiento: number;
     tasaInteres: number;
     numeroPeriodos: number;
+    primerFlujo: number;
+    segundoFlujo: number;
+    tercerFlujo: number;
+    cuartoFlujo: number;
+    quintoFlujo: number;
+    sextoFlujo: number;
     }
+
 
     export function ComponentTir() {
     const { register, handleSubmit } = useForm<FormData>();
     const [isChecked, setIsChecked] = useState(false);
     const [resultado, setResultado] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
-    const [imagen, setImagen] = useState<string>('');
+    const [message, setmessage] =useState<string | null>(null);
+    const [mostrar,setMostrar]= useState(true);
+    const [resultadoInteres, setResultadoInteres] = useState<number | null>(null);
 
     const onSubmit = async (data: FormData) => {
         setResultado(null);
         setError(null);
-
-        // Ajustes necesarios para calcular la TIR
-        const flujosDeEfectivo = [-data.primerPago]; // Flujo de efectivo inicial negativo
-
+        const flujosDeEfectivo = -data.primerPago;
+      
         try {
-        // Ajusta iteraciones y tolerancia según tus necesidades
-        const tir = TIR.calcularTIR(flujosDeEfectivo, 0, 5000, 0.0001);
+        if(data.primerPago && data.primerFlujo && data.segundoFlujo){
+            const tir = TIR.calcularTir(flujosDeEfectivo,data);
+            if(tir < 0 ){
+                setmessage('El proyecto se rechaza. La razón es que el proyecto da una rentabilidad menor que la rentabilidad mínima requerida.');
+            }
+            if(tir === 0){
+                setmessage('En este caso sería indiferente realizar el proyecto, ya que ni ganamos ni perdemos.');
+            }
+            if (tir !== undefined && !isNaN(tir)) {
+                setResultado(tir);
+                setResultadoInteres(TIR.calcularInteresRetorno(data,flujosDeEfectivo,tir));
+            } else {
+                setError('Error al calcular la TIR. Asegúrate de que los datos proporcionados son válidos y que la TIR ha convergido.');
+                console.error('La TIR no ha convergido o es NaN');
+            }
 
-        // Verificar si la TIR ha convergido antes de asignarla al estado
-        if (tir !== undefined && !isNaN(tir)) {
-            // Actualiza el estado de resultado
-            setResultado(tir);
-        } else {
-            // Manejar el caso donde la TIR no ha convergido o es NaN
-            setError('Error al calcular la TIR. Asegúrate de que los datos proporcionados son válidos y que la TIR ha convergido.');
-            console.error('La TIR no ha convergido o es NaN');
         }
         } catch (error) {
-        // Captura cualquier excepción que pueda ocurrir durante el cálculo
         setError(`Error al calcular la TIR: ${error}`);
         console.error('Error al calcular la TIR:', error);
         }
@@ -67,14 +77,27 @@
                         Mostrar monto final
                     </Checkbox>
                     </Row>
-
+                    <Spacer y={0.7} />
+                    <Row justify='space-between' style={{width:'90%'}}>
+                    <Input  {...register("primerFlujo")} min="0" clearable label="Primer flujo" type='double' width='6rem' />
+                    <Input  {...register("segundoFlujo")} min="0" clearable label="Segundo flujo" type='double' width='6rem' />
+                    <Input  {...register("tercerFlujo")} min="0" clearable label="Tercer flujo" type='double' width='6rem' />
+                    <Input  {...register("cuartoFlujo")} min="0" clearable label="Cuarto flujo" type='double' width='6rem' />
+                    </Row>
+                    {mostrar ? (
+                        <Row justify='space-between' style={{width:'43%'}}>
+                        <Input  {...register("quintoFlujo")} min="0" clearable label="Quinto flujo" type='double' width='6rem' />
+                        <Input  {...register("sextoFlujo")} min="0" clearable label="Sexto flujo" type='double' width='6rem' />
+                        </Row>
+                    ): <Spacer y={0.01} />
+                    }
                     <Spacer y={0.7} />
                     <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                     <Input  {...register("tasaInteres")} min="0" clearable label="Tasa de interés %" type='double' width='10rem' />
                     <Spacer y={0.7} />
                     <Input  {...register("numeroPeriodos")} min="0" clearable label="Número de periodos" type='double' width='10rem' />
                     </Row>
-
+                    <Spacer y={0.7} />
                     <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                     <Input  {...register("tasaCrecimiento")} min="0" clearable label="Tasa de crecimiento" type='number' width='10rem' />
                     </Row>
@@ -90,19 +113,10 @@
             <Spacer x={2} />
             <Col>
             <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '5% 8%', marginBottom: '2.5rem' }}>
-                <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Formula</Text>
-                {<img
-                src={imagen}
-                style={{ width: "100%", height: "auto", marginTop: "0%", marginLeft: '0%' }}
-                />}
-            </Col>
-            <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%' }}>
-                <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
-                <Spacer y={1} />
-                <Row align='center'>
+                <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Numero de TIR</Text>
                 {resultado !== null && (
                     <div>
-                    <Text>TIR: {resultado * 100}%</Text>
+                    <Text>TIR: {resultado }</Text>
                     </div>
                 )}
                 {error && (
@@ -110,7 +124,22 @@
                     <Text color="red">{error}</Text>
                     </div>
                 )}
-                </Row>
+                {message  && (
+                    <div>
+                    <Text color="red">{message}</Text>
+                    </div>
+                )
+                }
+            </Col>
+            <Col css={{ width: '70%', height: '13rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '10% 8%' }}>
+                <Text h1 size={20} css={{ letterSpacing: '1px', fontWeight: '$bold' }}>Resultado</Text>
+                <Spacer y={1} />
+                {resultadoInteres  && (
+                    <div>
+                    <Text >{resultadoInteres}</Text>
+                    </div>
+                )
+                }
             </Col>
             </Col>
         </Row>
