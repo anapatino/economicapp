@@ -1,18 +1,9 @@
 import { Spacer, Text, Container, Col, Row, Input, Button } from '@nextui-org/react';
 import { Select, Option } from '../../styled-component/Select';
 import { useForm } from "react-hook-form";
-
-import capitalImage from '../../assets/image/capital.png';
-import capitalFinalImage from '../../assets/image/capitalFinal.png';
-import tiempoImage from '../../assets/image/tiempo.png';
-import interesProducidoImage from '../../assets/image/interesProducido.png';
-import tasaInteresImage from '../../assets/image/tasaInteres.png';
-import { Checkbox } from 'antd';
-import { InterestSimple } from '../../domain/InterestSimple';
 import { GradienteGeometrico } from '../../domain/GradienteGeometrico';
 import React, { useState } from 'react';
 import { GradienteAritmetico } from '../../domain/GradienteAritmetico';
-
 
 interface Option {
     value: string;
@@ -63,7 +54,8 @@ export function ComponentGradienteGeometrico() {
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
 
-    const [selectedOption, setSelectedOption] = useState('valorFuturo'); // Estado para la opción seleccionada
+    const [selectedOption, setSelectedOption] = useState('valorPresente'); // Estado para la opción seleccionada
+    const [selectedOptions, setSelectedOptions] = useState('mensual'); // Estado para la opción seleccionada
 
     const handleOptionChange = (selectedValue: string) => {
         setSelectedOption(selectedValue);
@@ -74,43 +66,29 @@ export function ComponentGradienteGeometrico() {
         setTimeC(null);
 
         const tasaInteresDecimal = data.tasaInteres / 100; // Convertir la tasa de interés a decimal
-
-        // Calcula el resultado según la opción seleccionada
+        const tasaCrecimientoDecimal = data.tasaCrecimiento / 100;
         let resultado = null;
 
         if (selectedOption === 'valorPresente') {
-            resultado = GradienteAritmetico.calcularValorPresente(
+            resultado = GradienteGeometrico.calcularValorPresenteGradienteGeometrico(
                 data.primerPago,
                 tasaInteresDecimal,
+                tasaCrecimientoDecimal,
                 data.numeroPeriodos,
-                data.tasaCrecimiento
-            );
-        } else if (selectedOption === 'valorPresenteAnticipado') {
-            resultado = GradienteAritmetico.calcularValorPresenteAnticipado(
-                data.primerPago,
-                tasaInteresDecimal,
-                data.numeroPeriodos,
-                data.tasaCrecimiento
+               
             );
         } else if (selectedOption === 'valorFuturo') {
-            resultado = GradienteAritmetico.calcularValorFuturo(
+            resultado = GradienteGeometrico.calcularValorFuturoGradienteGeometrico(
                 data.primerPago,
                 tasaInteresDecimal,
+                tasaCrecimientoDecimal,
                 data.numeroPeriodos,
-                data.tasaCrecimiento
-            );
-        } else if (selectedOption === 'valorFuturoAnticipado') {
-            resultado = GradienteAritmetico.calcularValorFuturoAnticipado(
-                data.primerPago,
-                tasaInteresDecimal,
-                data.numeroPeriodos,
-                data.tasaCrecimiento
             );
         } else if (selectedOption === 'valorPresenteInfinito') {
-            resultado = GradienteAritmetico.calcularValorPresenteInfinito(
+            resultado = GradienteGeometrico.calcularValorPresenteGradienteGeometricoInfinito (
                 data.primerPago,
                 tasaInteresDecimal,
-                data.tasaCrecimiento
+                tasaCrecimientoDecimal
             );
         }
 
@@ -120,7 +98,10 @@ export function ComponentGradienteGeometrico() {
 
     return (
         <Col css={{ padding: '2rem' }}>
+
+
             <Text h1 size={30} color='#ffffff' css={{ letterSpacing: '1px', fontWeight: '$thin', marginTop: '2rem' }}>Gradiente Geométrico</Text>
+
             <Spacer y={1.2} />
             <Row justify='space-between' css={{ width: '100%' }}>
                 <Container css={{ width: '99%', height: '25rem', backgroundColor: '#ffffff', borderRadius: '2rem', padding: '2rem' }}>
@@ -133,9 +114,8 @@ export function ComponentGradienteGeometrico() {
                                         onChange={(e) => setSelectedOption(e.target.value)}
                                     >   <Option value="Default">elija una opcion</Option>
                                         <Option value="valorPresente">Valor Presente</Option>
-                                        <Option value="valorPresenteAnticipado">Valor Presente Anticipado</Option>
+
                                         <Option value="valorFuturo">Valor Futuro</Option>
-                                        <Option value="valorFuturoAnticipado">Valor Futuro Anticipado</Option>
                                         <Option value="valorPresenteInfinito">Valor Presente Infinito</Option>
                                        
                                     </Select>
@@ -156,13 +136,13 @@ export function ComponentGradienteGeometrico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input {...register("primerPago")} min="0" clearable label="primer pago" type='number' width='20.7rem' />
                                     <Spacer x={2} />
-                                    <Checkbox
+                                    {/* <Checkbox
                                         checked={isChecked}
                                         onChange={(e) => handleCheckboxChange(e.target.checked)}
                                         style={{ marginLeft: '0.001%' }}
                                     >
                                         Mostrar monto final
-                                    </Checkbox>
+                                    </Checkbox> */}
                                 </Row>
 
                                 <Spacer y={0.7} />
@@ -174,12 +154,15 @@ export function ComponentGradienteGeometrico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input  {...register("tasaCrecimiento")} min="0" clearable label="Tasa de crecimiento" type='number' width='10rem' />
                                     <Spacer y={1} />
-                                    <Select >
-                                        {options.map((option) => (
-                                            <Option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </Option>
-                                        ))}
+                                    <Select
+                                        value={selectedOptions}
+                                        onChange={(e) => setSelectedOptions(e.target.value)}
+                                    >   
+                                        {/* <Option value="Default">elija una opcion</Option> */}
+                                        <Option value="mensual">Mensual</Option>
+                                        <Option value="trimestral">Trimestral</Option>
+                                        <Option value="semestral">Semestral</Option>
+                                        <Option value="Anual">Anual</Option>
                                     </Select>
                                     </Row>
                                 <Spacer y={1} />
