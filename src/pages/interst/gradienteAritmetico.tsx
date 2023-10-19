@@ -71,7 +71,7 @@ export function ComponentGradienteArtmetico() {
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
 
-    const [selectedOption, setSelectedOption] = useState('valorFuturo'); // Estado para la opción seleccionada
+    const [selectedOption, setSelectedOption] = useState('valorPresente'); // Estado para la opción seleccionada
     const [selectedOptions, setSelectedOptions] = useState('mensual'); // Estado para la opción seleccionada
 
     const handleOptionChange = (selectedValue: string) => {
@@ -165,13 +165,13 @@ export function ComponentGradienteArtmetico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input {...register("primerPago")} min="0" clearable label="primer pago" type='number' width='20.7rem' />
                                     <Spacer x={2} />
-                                    <Checkbox
+                                    {/* <Checkbox
                                         checked={isChecked}
                                         onChange={(e) => handleCheckboxChange(e.target.checked)}
                                         style={{ marginLeft: '0.001%' }}
                                     >
                                         Mostrar monto final
-                                    </Checkbox>
+                                    </Checkbox> */}
                                 </Row>
 
                                 <Spacer y={0.7} />
