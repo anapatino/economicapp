@@ -1,18 +1,9 @@
 import { Spacer, Text, Container, Col, Row, Input, Button } from '@nextui-org/react';
 import { Select, Option } from '../../styled-component/Select';
 import { useForm } from "react-hook-form";
-
-import capitalImage from '../../assets/image/capital.png';
-import capitalFinalImage from '../../assets/image/capitalFinal.png';
-import tiempoImage from '../../assets/image/tiempo.png';
-import interesProducidoImage from '../../assets/image/interesProducido.png';
-import tasaInteresImage from '../../assets/image/tasaInteres.png';
-import { Checkbox } from 'antd';
-import { InterestSimple } from '../../domain/InterestSimple';
 import { GradienteGeometrico } from '../../domain/GradienteGeometrico';
 import React, { useState } from 'react';
 import { GradienteAritmetico } from '../../domain/GradienteAritmetico';
-
 
 interface Option {
     value: string;
@@ -63,7 +54,7 @@ export function ComponentGradienteGeometrico() {
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
 
-    const [selectedOption, setSelectedOption] = useState('valorFuturo'); // Estado para la opción seleccionada
+    const [selectedOption, setSelectedOption] = useState('valorPresente'); // Estado para la opción seleccionada
     const [selectedOptions, setSelectedOptions] = useState('mensual'); // Estado para la opción seleccionada
 
     const handleOptionChange = (selectedValue: string) => {
@@ -76,7 +67,6 @@ export function ComponentGradienteGeometrico() {
 
         const tasaInteresDecimal = data.tasaInteres / 100; // Convertir la tasa de interés a decimal
         const tasaCrecimientoDecimal = data.tasaCrecimiento / 100;
-        // Calcula el resultado según la opción seleccionada
         let resultado = null;
 
         if (selectedOption === 'valorPresente') {
@@ -87,13 +77,6 @@ export function ComponentGradienteGeometrico() {
                 data.numeroPeriodos,
                
             );
-        } else if (selectedOption === 'valorPresenteAnticipado') {
-            resultado = GradienteAritmetico.calcularValorPresenteAnticipado(
-                data.primerPago,
-                tasaInteresDecimal,
-                data.numeroPeriodos,
-                data.tasaCrecimiento
-            );
         } else if (selectedOption === 'valorFuturo') {
             resultado = GradienteGeometrico.calcularValorFuturoGradienteGeometrico(
                 data.primerPago,
@@ -101,18 +84,11 @@ export function ComponentGradienteGeometrico() {
                 tasaCrecimientoDecimal,
                 data.numeroPeriodos,
             );
-        } else if (selectedOption === 'valorFuturoAnticipado') {
-            resultado = GradienteAritmetico.calcularValorFuturoAnticipado(
-                data.primerPago,
-                tasaInteresDecimal,
-                data.numeroPeriodos,
-                data.tasaCrecimiento
-            );
         } else if (selectedOption === 'valorPresenteInfinito') {
-            resultado = GradienteAritmetico.calcularValorPresenteInfinito(
+            resultado = GradienteGeometrico.calcularValorPresenteGradienteGeometricoInfinito (
                 data.primerPago,
                 tasaInteresDecimal,
-                data.tasaCrecimiento
+                tasaCrecimientoDecimal
             );
         }
 
@@ -135,9 +111,8 @@ export function ComponentGradienteGeometrico() {
                                         onChange={(e) => setSelectedOption(e.target.value)}
                                     >   <Option value="Default">elija una opcion</Option>
                                         <Option value="valorPresente">Valor Presente</Option>
-                                        <Option value="valorPresenteAnticipado">Valor Presente Anticipado</Option>
+
                                         <Option value="valorFuturo">Valor Futuro</Option>
-                                        <Option value="valorFuturoAnticipado">Valor Futuro Anticipado</Option>
                                         <Option value="valorPresenteInfinito">Valor Presente Infinito</Option>
                                        
                                     </Select>

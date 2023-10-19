@@ -71,7 +71,7 @@ export function ComponentGradienteArtmetico() {
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
 
-    const [selectedOption, setSelectedOption] = useState('valorFuturo'); // Estado para la opción seleccionada
+    const [selectedOption, setSelectedOption] = useState('valorPresente'); // Estado para la opción seleccionada
     const [selectedOptions, setSelectedOptions] = useState('mensual'); // Estado para la opción seleccionada
 
     const handleOptionChange = (selectedValue: string) => {
