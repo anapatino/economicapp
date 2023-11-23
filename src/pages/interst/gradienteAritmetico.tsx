@@ -40,15 +40,8 @@ interface FormData {
 }
 
 export function ComponentGradienteArtmetico() {
-    
-    const optionss: Option[] = [
-        { value: 'annual', label: 'anual' },
-        { value: 'bimonthly', label: 'bimestral' },
-        { value: 'quarterly', label: 'trimestral' },
-        { value: 'semiannual', label: 'semestral' },
-        { value: 'months', label: 'mensual' },
-    ];
-    
+
+
     const options: Option[] = [
         { value: 'valorPresente', label: 'Valor Presente' },
         { value: 'valorPresenteAnticipado', label: 'Valor Presente Anticipado' },
@@ -71,28 +64,46 @@ export function ComponentGradienteArtmetico() {
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
 
-    const [selectedOption, setSelectedOption] = useState('valorPresente'); // Estado para la opción seleccionada
-    const [selectedOptions, setSelectedOptions] = useState('mensual'); // Estado para la opción seleccionada
+    const [selectedOption, setSelectedOption] = useState('valorPresente');
+    const [tasaPeriodica, setTasaPeriodica] = useState('mensual');
+    const [tasaPeriodicaValue, setTasaPeriodicaValue] = useState<number>(12);
 
     const handleOptionChange = (selectedValue: string) => {
         setSelectedOption(selectedValue);
+    };
+    const handleTasaPeriodicaChange = (selectedValue: string) => {
+        switch (selectedValue) {
+            case 'mensual':
+                setTasaPeriodicaValue(12);
+                break;
+            case 'trimestral':
+                setTasaPeriodicaValue(3);
+                break;
+            case 'semestral':
+                setTasaPeriodicaValue(2);
+                break;
+            case 'Anual':
+                setTasaPeriodicaValue(1);
+                break;
+            default:
+                setTasaPeriodicaValue(0);
+                break;
+        }
     };
 
     const onSubmit = (data: FormData) => {
         setResultado(null);
         setTimeC(null);
-
-        const tasaInteresDecimal = data.tasaInteres / 100; // Convertir la tasa de interés a decimal
-
-        // Calcula el resultado según la opción seleccionada
+        const tasaInteresDecimal = data.tasaInteres / 100;
+        const newData = tasaPeriodicaValue;
         let resultado = null;
-
         if (selectedOption === 'valorPresente') {
             resultado = GradienteAritmetico.calcularValorPresente(
                 data.primerPago,
                 tasaInteresDecimal,
                 data.numeroPeriodos,
-                data.tasaCrecimiento
+                data.tasaCrecimiento,
+                newData
             );
         } else if (selectedOption === 'valorPresenteAnticipado') {
             resultado = GradienteAritmetico.calcularValorPresenteAnticipado(
@@ -106,14 +117,16 @@ export function ComponentGradienteArtmetico() {
                 data.primerPago,
                 tasaInteresDecimal,
                 data.numeroPeriodos,
-                data.tasaCrecimiento
+                data.tasaCrecimiento,
+                newData
             );
         } else if (selectedOption === 'valorFuturoAnticipado') {
-            resultado = GradienteAritmetico.calcularValorFuturoAnticipado(
+            resultado = GradienteAritmetico.calcularCuotaPeriodicaUniforme(
                 data.primerPago,
                 tasaInteresDecimal,
                 data.numeroPeriodos,
-                data.tasaCrecimiento
+                data.tasaCrecimiento,
+                newData
             );
         } else if (selectedOption === 'valorPresenteInfinito') {
             resultado = GradienteAritmetico.calcularValorPresenteInfinito(
@@ -122,8 +135,6 @@ export function ComponentGradienteArtmetico() {
                 data.tasaCrecimiento
             );
         }
-
-        // Actualiza el estado de resultado
         setResultado(resultado);
     };
 
@@ -137,7 +148,7 @@ export function ComponentGradienteArtmetico() {
                         <Col>
                             <Col css={{ marginLeft: '2rem' }}>
                                 <Row>
-                                <Select
+                                    <Select
                                         value={selectedOption}
                                         onChange={(e) => setSelectedOption(e.target.value)}
                                     >   <Option value="Default">elija una opcion</Option>
@@ -146,7 +157,7 @@ export function ComponentGradienteArtmetico() {
                                         <Option value="valorFuturo">Valor Futuro</Option>
                                         <Option value="valorFuturoAnticipado">Valor Futuro Anticipado</Option>
                                         <Option value="valorPresenteInfinito">Valor Presente Infinito</Option>
-                                       
+
                                     </Select>
 
                                     <Spacer x={0.6} />
@@ -157,9 +168,9 @@ export function ComponentGradienteArtmetico() {
                                             </Option>
                                         ))}
                                     </Select> */}
-                                    
+
                                     <Spacer x={0.6} />
-                                   
+
                                 </Row>
                                 <Spacer y={0.7} />
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
@@ -183,19 +194,27 @@ export function ComponentGradienteArtmetico() {
                                 <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
                                     <Input  {...register("tasaCrecimiento")} min="0" clearable label="Tasa de crecimiento" type='number' width='10rem' />
                                     <Spacer y={1} />
+                                    
+
                                     <Select
-                                        value={selectedOptions}
-                                        onChange={(e) => setSelectedOptions(e.target.value)}
-                                    >   
-                                        {/* <Option value="Default">elija una opcion</Option> */}
+                                        value={tasaPeriodica}
+                                        onChange={(e) => {
+                                            setTasaPeriodica(e.target.value);
+                                            handleTasaPeriodicaChange(e.target.value);
+                                        }}
+                                    >
                                         <Option value="mensual">Mensual</Option>
                                         <Option value="trimestral">Trimestral</Option>
                                         <Option value="semestral">Semestral</Option>
                                         <Option value="Anual">Anual</Option>
                                     </Select>
 
+                                    <div>
+                                <Text>Tasa seleccionada: {tasaPeriodicaValue}</Text>
+                            </div>
+
                                     <Spacer x={0.6} />
-                                    </Row>
+                                </Row>
                                 <Spacer y={1} />
                                 <Button color="success" auto type="submit" css={{ fontFamily: 'Didact Gothic', width: '8rem', fontSize: '1rem' }}>
                                     Calcular

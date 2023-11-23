@@ -45,22 +45,50 @@ export function ComponentInterestSimple() {
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
     const [imagen, setImagen] = useState<string>('');
 
+    const [selectedOption, setSelectedOption] = useState('valorPresente');
+    const [tasaPeriodica, setTasaPeriodica] = useState('anual');
+    const [tasaPeriodicaValue, setTasaPeriodicaValue] = useState<number>(12);
+
+    const handleOptionChange = (selectedValue: string) => {
+        setSelectedOption(selectedValue);
+    };
+    const handleTasaPeriodicaChange = (selectedValue: string) => {
+        switch (selectedValue) {
+            case 'mensual':
+                setTasaPeriodicaValue(12);
+                break;
+            case 'trimestral':
+                setTasaPeriodicaValue(3);
+                break;
+            case 'semestral':
+                setTasaPeriodicaValue(2);
+                break;
+            case 'Anual':
+                setTasaPeriodicaValue(1);
+                break;
+            default:
+                setTasaPeriodicaValue(0);
+                break;
+        }
+    };
+
     const onSubmit = (data: FormData) => {
         setValorFuturo(null);
         setTimeC(null);
+        const newData = tasaPeriodicaValue;
         let tiempo = 0;
 
         let filledFields = 0; // Contador de campos llenos
 
         switch (tiempoType) {
             case 'years':
-                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 360);
+                tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 365);
                 break;
             case 'months':
-                tiempo = (data.customMonths / 12) + (data.customDays / 360);
+                tiempo = (data.customMonths / 12) + (data.customDays / 365);
                 break;
             case 'days':
-                tiempo = data.customDays / 360;
+                tiempo = data.customDays / 365;
                 break;
             default:
                 break;
@@ -141,6 +169,21 @@ export function ComponentInterestSimple() {
                                         {tiempoType === 'months' || tiempoType === 'days' || tiempoType === 'years' ? (
                                             <Input {...register('customDays')} min="0" clearable label="Días" type="number" width="8rem" defaultValue={0} />
                                         ) : ""}
+                                        <Select
+                                        value={tasaPeriodica}
+                                        onChange={(e) => {
+                                            setTasaPeriodica(e.target.value);
+                                            handleTasaPeriodicaChange(e.target.value);
+                                        }}
+                                    >
+                                        <Option value="mensual">Mensual</Option>
+                                        <Option value="trimestral">Trimestral</Option>
+                                        <Option value="semestral">Semestral</Option>
+                                        <Option value="Anual">Anual</Option>
+                                    </Select>
+
+                                    <div>
+                                <Text>Tasa seleccionada: {tasaPeriodicaValue}</Text></div>
                                     </Row>
                                 </Row>
                                 <Spacer y={0.7} />
@@ -161,6 +204,7 @@ export function ComponentInterestSimple() {
                                 <Spacer y={0.7} />
                                 <Input  {...register("interestEarned")} min="0" clearable label="Interes producido" type='number' width='10rem' />
                                 <Spacer y={1} />
+                                
                                 <Button color="success" auto type="submit" css={{ fontFamily: 'Didact Gothic', width: '8rem', fontSize: '1rem' }}>
                                     Calcular
                                 </Button>

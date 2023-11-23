@@ -1,3 +1,4 @@
+
 export class InterestCompound {
   static calculateFutureValue(
     data: { capital: number; interestRate: number },
@@ -5,7 +6,7 @@ export class InterestCompound {
   ): number {
     const { capital, interestRate } = data;
     const decimalRate = interestRate / 100;
-    const factor = Math.pow(1 + decimalRate, time);
+    const factor = Math.pow(1 + decimalRate, time * 12);
     return capital * factor;
   }
 
@@ -13,15 +14,30 @@ export class InterestCompound {
     data: { capital: number; interestRate: number },
     time: number
   ): number {
-    return this.calculateFutureValue(data, time) - data.capital;
+    const { capital, interestRate } = data;
+    const decimalRate = interestRate / 100;
+    const factor = (1 + decimalRate * time );
+    return capital * factor;
   }
 
+  //CALCULA EL VALOR FINAL A INTERES COMPUESTO
   static calculateTotalCapital(
     data: { capital: number; interestRate: number },
     time: number
   ): number {
     return this.calculateFutureValue(data, time);
   }
+//-------------------------
+
+static calculateSimpleInterestFinalValue(
+  data: { capital: number; interestRate: number },
+  time: number
+): number {
+  const { capital, interestRate } = data;
+  const decimalRate = interestRate / 100;
+  const factor = 1 + (decimalRate * 3);
+  return capital * factor;
+}
 
   static calculateInitialInvestment(
     data: { futureValue: number; interestRate: number },
@@ -31,7 +47,7 @@ export class InterestCompound {
     const factor = Math.pow(1 + interestRate / 100, time);
     return futureValue / factor;
   }
-
+ 
   static calculateInterestRate(
     data: { capital: number; futureValue: number },
     time: number

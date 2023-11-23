@@ -1,3 +1,4 @@
+
 import { Spacer, Text, Container, Col, Row, Input, Button } from '@nextui-org/react';
 import { Select, Option } from '../../styled-component/Select';
 import { useForm } from "react-hook-form";
@@ -36,14 +37,11 @@ export function InterestCompound() {
     };
 
 
-    const [valorFuturo, setValorFuturo] = useState<number | null>(null);
+    const [valorFuturo, setValorFuturo] = useState<number | null >(null);
     const [imagen, setImagen] = useState<string>('');
 
     const onSubmit = (data: FormData) => {
-        setValorFuturo(null);
         let tiempo = 0;
-        let filledFields = 0; // Contador de campos llenos
-
         switch (tiempoType) {
             case 'years':
                 tiempo = (data.customYears / 1) + (data.customMonths / 12) + (data.customDays / 365);
@@ -59,58 +57,38 @@ export function InterestCompound() {
         }
 
         if (tiempo > 0) {
-            filledFields++;
-        }
-        if (data.interestRate) {
-            filledFields++;
-        }
-        if (data.interestEarned) {
-            filledFields++;
-        }
-        if (data.capital) {
-            filledFields++;
-        }
-
-        if (filledFields === 3) {
             if (data.capital && data.interestRate) {
                 const interestData = {
                     capital: data.capital,
                     interestRate: data.interestRate,
                 };
-                if (isChecked) {
+                if(isChecked){
                     setValorFuturo(IC.calculateTotalCapital(interestData, tiempo));
                     setImagen(capitalFinalImage);
                 }
-                else {
-                    setValorFuturo(IC.calculateInterestEarned(interestData, tiempo));
+                else{
+                    setValorFuturo(IC.calculateSimpleInterestFinalValue(interestData, tiempo));
                     setImagen(capitalImage);
-
                 }
-            } else if (data.capital && data.interestEarned) {
+            }
+            if (data.interestEarned && data.interestRate) {
+                const timeData = {
+                    futureValue: data.interestEarned,
+                    interestRate: data.interestRate,
+                };
+                setValorFuturo(IC.calculateInitialInvestment(timeData, tiempo));
+                setImagen(tiempoImage);
+            }
+
+            if (data.capital && data.interestEarned) {
                 const interestData = {
                     capital: data.capital,
                     futureValue: data.interestEarned,
                 };
                 setValorFuturo(IC.calculateInterestRate(interestData, tiempo));
                 setImagen(tasaInteresImage);
-            } if (data.interestEarned && data.interestRate) {
-                const timeData = {
-                    futureValue: data.interestEarned,
-                    interestRate: data.interestRate,
-                };
-                setValorFuturo(IC.calculateInitialInvestment(timeData, tiempo));
-                setImagen(capitalImage);
-            } if (data.interestEarned && data.interestRate && data.capital) {
-                const timeData = {
-                    capital: data.capital,
-                    futureValue: data.interestEarned,
-                    interestRate: data.interestRate
-                };
-                const timeInDays = IC.calculateTime(timeData, "days"); // Supongo que quieres mostrar el tiempo en días
-                setValorFuturo(timeInDays);
-                setImagen(tiempoImage);
-            } 
-        }else {
+            }
+        } else {
             // Manejar caso de condiciones no válidas, por ejemplo, mostrar un mensaje de error.
             console.error("Las condiciones ingresadas no son válidas para realizar los cálculos de interés compuesto.");
         }
@@ -189,7 +167,7 @@ export function InterestCompound() {
                         <Spacer y={1} />
                         <Row align='center'>
                             <Dollar />
-                            <Spacer x={0.5} />
+                            <Spacer x={1} />
                             <Text size={20}>
                                 {valorFuturo !== null ? valorFuturo.toFixed(2) : '---'}
                             </Text>
