@@ -40,7 +40,6 @@ export function ComponentInterestSimple() {
         setIsChecked(checked);
     };
 
-
     const [valorFuturo, setValorFuturo] = useState<number | null>(null);
     const [valorCapital, setValorCapital] = useState<number | null>(null);
     const [timeC, setTimeC] = useState<{ años: number; meses: number; días: number } | null>(null);
@@ -52,7 +51,6 @@ export function ComponentInterestSimple() {
         let tiempo = 0;
 
         let filledFields = 0; // Contador de campos llenos
-
 
         switch (tiempoType) {
             case 'years':
