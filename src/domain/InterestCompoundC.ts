@@ -2,30 +2,34 @@
 export class InterestCompound {
   static calculateFutureValue(
     data: { capital: number; interestRate: number },
-    time: number
+    time: number,
+    newData:number
   ): number {
     const { capital, interestRate } = data;
     const decimalRate = interestRate / 100;
-    const factor = Math.pow(1 + decimalRate, time * 12);
+    const factor = Math.pow(1 + decimalRate/newData, time * 12);
+    console.log(`El Factor 2 es: ${decimalRate/newData}`);
     return capital * factor;
   }
 
   static calculateInterestEarned(
     data: { capital: number; interestRate: number },
-    time: number
+    time: number, newData:number
   ): number {
     const { capital, interestRate } = data;
     const decimalRate = interestRate / 100;
-    const factor = (1 + decimalRate * time );
+    const factor = (1 + decimalRate/newData * time );
+    console.log(`El Factor 2 es: ${newData}`);
     return capital * factor;
   }
 
   //CALCULA EL VALOR FINAL A INTERES COMPUESTO
   static calculateTotalCapital(
     data: { capital: number; interestRate: number },
-    time: number
+    time: number, newData:number
+    // newData
   ): number {
-    return this.calculateFutureValue(data, time);
+    return this.calculateFutureValue(data, time,newData);
   }
 //-------------------------
 
