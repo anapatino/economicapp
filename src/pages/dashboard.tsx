@@ -9,12 +9,13 @@ import { Outlet } from "react-router-dom";
  function Dashboard() {
 
   const listInterest: Items[] = [
-    { key: 'interestSimple', name: 'Interes simple',route:'interest-simple/' },
+    { key: 'interestSimple', name: 'interes Simple',route:'interest-simple/' },
     { key: 'interestCompound', name: 'Interes Compuesto',route:'interest-compound/' },
   ];
   const listSecond: Items[] = [
-    { key: '1', name: 'Primer ejercicio', route:'' },
-    { key: '2', name: 'Segundo ejercicio', route:'' },
+    { key: 'gradienteAritmetico', name: 'Gradiente Aritmético',route:'gradiente-aritmetico/' },
+    { key: 'gradienteGeometrico', name: 'Gradiente Geométrico',route:'gradiente-geometrico/' },
+    { key: 'tir', name: 'Tasa Interna de Retorno',route:'tir/' },
   ];
 
   const listThird: Items[] = [
@@ -30,9 +31,9 @@ import { Outlet } from "react-router-dom";
         <p className='NameLogo'>economicapp</p>
         </Row>
         <Col css={{justifyItems:'center', marginLeft:'1.5rem'}}>
-          <DropdownNative items={listInterest} title='Consultar interes'/>
+          <DropdownNative items={listInterest} title='Calcular Intereses'/>
           <Spacer y={3}/>
-          <DropdownNative items={listSecond} title='Consultas segundo corte'/>
+          <DropdownNative items={listSecond} title='Gradientes'/>
           <Spacer y={3}/>
           <DropdownNative items={listThird} title='Consultar tercer corte'/>
         </Col>

@@ -1,5 +1,4 @@
 {
-  "homepage": "https://anapatino.github.io/economicapp/",
   "name": "economicapp",
   "version": "0.1.0",
   "private": true,
@@ -12,6 +11,7 @@
     "@types/node": "^16.18.43",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
+    "antd": "^5.8.6",
     "framer-motion": "^10.16.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -47,8 +47,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "gh-pages": "^6.0.0"
   }
 }
