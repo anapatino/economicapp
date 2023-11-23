@@ -5,7 +5,8 @@ export class GradienteGeometrico {
         primeraCuota: number,
         interes: number,
         tasaCrecimiento: number,
-        numeroPeriodos: number
+        numeroPeriodos: number,
+        
     ): number {
 
         if (tasaCrecimiento != interes) {
@@ -18,7 +19,6 @@ export class GradienteGeometrico {
         } else {
             return (numeroPeriodos * primeraCuota) / (1 + interes);
         }
-
     }
 
     static calcularValorFuturoGradienteGeometrico(
