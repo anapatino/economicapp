@@ -40,7 +40,40 @@ export function InterestCompound() {
     const [valorFuturo, setValorFuturo] = useState<number | null >(null);
     const [imagen, setImagen] = useState<string>('');
 
+    const [selectedOption, setSelectedOption] = useState('valorPresente');
+    const [tasaPeriodica, setTasaPeriodica] = useState('mensual');
+    const [tasaPeriodicaValue, setTasaPeriodicaValue] = useState<number>(12);
+
+    const handleOptionChange = (selectedValue: string) => {
+        setSelectedOption(selectedValue);
+    };
+    const handleTasaPeriodicaChange = (selectedValue: string) => {
+        switch (selectedValue) {
+            case 'diario':
+                setTasaPeriodicaValue(365);
+                break;
+            case 'mensual':
+                setTasaPeriodicaValue(1);
+                break;
+            case 'trimestral':
+                setTasaPeriodicaValue(3);
+                break;
+            case 'semestral':
+                setTasaPeriodicaValue(6);
+                break;
+            case 'Anual':
+                setTasaPeriodicaValue(12);
+                break;
+            default:
+                setTasaPeriodicaValue(0);
+                break;
+        }
+    };
+
+
     const onSubmit = (data: FormData) => {
+        let newData =tasaPeriodicaValue;
+        
         let tiempo = 0;
         switch (tiempoType) {
             case 'years':
@@ -56,14 +89,18 @@ export function InterestCompound() {
                 break;
         }
 
+        
+
         if (tiempo > 0) {
             if (data.capital && data.interestRate) {
                 const interestData = {
                     capital: data.capital,
                     interestRate: data.interestRate,
+                    
                 };
+                // newData = tasaPeriodicaValue;
                 if(isChecked){
-                    setValorFuturo(IC.calculateTotalCapital(interestData, tiempo));
+                    setValorFuturo(IC.calculateTotalCapital(interestData, tiempo, newData));
                     setImagen(capitalFinalImage);
                 }
                 else{
@@ -75,6 +112,7 @@ export function InterestCompound() {
                 const timeData = {
                     futureValue: data.interestEarned,
                     interestRate: data.interestRate,
+                    newData
                 };
                 setValorFuturo(IC.calculateInitialInvestment(timeData, tiempo));
                 setImagen(tiempoImage);
@@ -84,6 +122,7 @@ export function InterestCompound() {
                 const interestData = {
                     capital: data.capital,
                     futureValue: data.interestEarned,
+                    newData
                 };
                 setValorFuturo(IC.calculateInterestRate(interestData, tiempo));
                 setImagen(tasaInteresImage);
@@ -142,10 +181,34 @@ export function InterestCompound() {
                                 </Row>
 
                                 <Spacer y={0.7} />
+                                <Row style={{ display: 'flex', alignItems: 'center', justifyItems: 'center' }}>
+                                <Spacer y={0.7} />
                                 <Input  {...register("interestRate")} min="0" clearable label="Tasa de interes %" type='double' width='10rem' />
+                                
+                                <Select
+                                        value={tasaPeriodica}
+                                        onChange={(e) => {
+                                            setTasaPeriodica(e.target.value);
+                                            handleTasaPeriodicaChange(e.target.value);
+                                        }}
+                                    >
+                                        <Option value="diario">Diario</Option>
+                                        <Option value="mensual">Mensual</Option>
+                                        <Option value="trimestral">Trimestral</Option>
+                                        <Option value="semestral">Semestral</Option>
+                                        <Option value="Anual">Anual</Option>
+                                    </Select>
+
+                                    <div>
+                                <Text>Tasa seleccionada: {tasaPeriodicaValue}</Text>
+                            </div>
+                                
+                                </Row>
                                 <Spacer y={0.7} />
                                 <Input  {...register("interestEarned")} min="0" clearable label="Interes producido" type='number' width='10rem' />
                                 <Spacer y={1} />
+
+                                
                                 <Button color="success" auto type="submit" css={{ fontFamily: 'Didact Gothic', width: '8rem', fontSize: '1rem' }}>
                                     Calcular
                                 </Button>
